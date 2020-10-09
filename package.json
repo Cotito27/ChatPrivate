@@ -1,0 +1,32 @@
+{
+  "name": "chatconbdrepl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src",
+    "dev": "nodemon src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@replit/database": "^2.0.0",
+    "body-parser": "^1.19.0",
+    "callback": "0.0.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "jsonfile": "^6.0.1",
+    "node-fetch": "^2.6.1",
+    "node-sessionstorage": "^1.0.0",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4"
+  }
+}

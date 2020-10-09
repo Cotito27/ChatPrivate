@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <%- include ('partials/head.html')%>
+</head>
+
+<body>
+  <audio id="audio" src="/audio/samsung-sound.mp3"></audio>
+    <% if(validado==undefined || validado==null || validado=="") { %>
+    <% if(redirect=="page-login") { %>
+    <%- include ('partials/modal-login.html') %>
+    <% } else if(redirect=="page-register") { %>
+    <%- include ('partials/modal-register.html') %>
+    <% } %>
+    <% } %>
+   
+    <div class="container p-3">
+      <%- include ('partials/navigation.html')%>
+      <%- include ('partials/content-message.html')%>
+      <%- include ('partials/content-history.html')%>
+      <%- include ('partials/content-users.html')%>
+      <%- include ('partials/content-config.html')%>
+      
+      
+    </div>
+  
+    <%- include ('partials/footer.html')%>
+</body>
+</html>

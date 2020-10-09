@@ -1,0 +1,231 @@
+<% let selector = ""; %>
+<div class="row" id="content-message"<%= selector %>>
+  <div class="col-md-12 mx-auto components-message">
+    <div class="card panel-message" id="panelM">
+      <div class="container-destino">
+        <i class="fas fa-chevron-left btn-prepanel"></i> <label class="title-destino" id="destinoM">Todos</label>
+        <input type="hidden" class="selectorUser" value="Todos">
+      </div>
+      <div class="card-body card-message">
+        <% let changeUser = "cotito"; %>
+        <div class="container-message" id="Todos">
+          <% if(dataMessages){
+          for(let i=0; i<dataMessages.length; i++) { %>
+          <% if(dataMessages[i].username){
+          if(dataMessages[i].username.toUpperCase() == changeUser) { %>
+            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage mymessage">
+              <div class="contenidoimg">
+              <img class="imguser" src="<%= dataMessages[i].foto %>">
+              </div>
+              <div class="mycontenidomessage">
+                
+              <strong class="nom-user-message"><%= dataMessages[i].nombre %></strong>
+              <p class="res-message"><%= dataMessages[i].message %></p>
+              
+              </div><div class="horamessage">
+                  <small class="hora"><%= dataMessages[i].date %></small>
+              </div>
+              <label id="<%= dataMessages[i].id %>"><i class="fas fa-check icon-ready"></i></label>
+            </div>
+          <% } else { %>
+            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage">
+              <div class="contenidoimg">
+               <img class="imguser" src="<%= dataMessages[i].foto %>">
+              </div>
+              <div class="othercontenidomessage">
+               
+              <strong class="nom-user-message"><%= dataMessages[i].nombre %></strong>
+              <p class="res-message"><%= dataMessages[i].message %></p>
+              
+              </div><div class="horamessage">
+              <small class="hora"><%= dataMessages[i].date %></small>
+              </div>
+            </div>
+          <% } %>
+          <% } %>
+          <% } }%>
+          <!--<div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+              <i class="far fa-clock icon-loader"></i>
+              <i class="fas fa-check icon-ready"></i>
+            
+          </div>-->
+          
+
+          <!--<div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>
+          <div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>
+          <div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>
+          <div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>
+          <div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>
+          <div class="othermessage">
+            <div class="contenidoimg">
+             <img class="imguser" src="img/user.png">
+            </div>
+            <div class="othercontenidomessage">
+             
+            <strong>Jose</strong>
+            <p>Hola!!</p>
+            
+            </div><div class="horamessage">
+            <small class="hora">12:06 PM</small>
+            </div>
+          </div>
+          <div class="mymessage">
+            <div class="contenidoimg">
+            <img class="imguser" src="img/User2.png">
+            </div>
+            <div class="mycontenidomessage">
+              
+            <strong>Cotito</strong>
+            <p>Hola como estas</p>
+            
+            </div><div class="horamessage">
+                <small class="hora">12:05 PM</small>
+            </div>
+          </div>-->
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="form-group form-message">
+          <textarea class="form-control textMessage" id="textMessage" placeholder="Escriba algo"></textarea>
+          <button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

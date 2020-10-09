@@ -1,0 +1,102 @@
+<% let selector = ""; %>
+
+<div class="row" id="content-config"<%= selector %>>
+  <div class="col-md-12 mx-auto">
+    <div class="card">
+      <div class="card-header">
+        <center>
+          <h3 id="settings" class="modal-title">Configuraciones</h3>
+        </center>
+      </div>
+      <div class="card-body card-config">
+        <div class="container-config">
+          <center>
+            <div class="subtitle-noti">
+              <h4 class="titleajustenoti">Ajuste de notificaciones</h4>
+            </div>
+          </center>
+          <hr />
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="checkConfig"
+              value=""
+              id="defaultCheck1"
+            />
+            <label class="form-check-label namesound" for="defaultCheck1">
+              Sonido de notificación
+            </label>
+          </div>
+          <br />
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="checkConfig2"
+              value=""
+              id="defaultCheck2"
+              checked
+            />
+            <label class="form-check-label namesound" for="defaultCheck2">
+              Notificar cuando ingrese un usuario nuevo
+            </label>
+          </div>
+          <br />
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="checkConfig3"
+              value=""
+              id="defaultCheck3"
+              checked
+            />
+            <label class="form-check-label namesound" for="defaultCheck3">
+              Notificar cuando salga un usuario
+            </label>
+          </div>
+          <br>
+          <center>
+            <div class="subtitle-noti">
+              <h4 class="titlecolornoti">Color de mensaje</h4>
+            </div>
+          </center>
+
+          <hr />
+          <div class="contentcolors">
+            <div class="contenedorcolors">
+              <center>
+                <input type="color" class="selector-color" value="#000" />
+              </center>
+            </div>
+          </div>
+        </div>
+        <br>
+        <center>
+          <div class="cambio-foto">
+            <h4>Cambiar Foto</h4>
+          </div>
+        
+        <hr />
+        <img id="imgUserConfig" src="/img/user.png" width="70" height="70" alt="">  
+        <strong class="nameUserConfig" style="font-size: 20px;">${NOM_USER}</strong>
+        <br>
+        <br>        
+        </center>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="file-foto" required>
+          <label class="custom-file-label" for="file-foto">Elige la foto</label>
+        </div>
+        <button id="eliminarFoto" class="btn btn-danger btn-block">
+          Eliminar Foto
+        </button>
+        <br>
+        <br>
+        <button id="guardarCambios" class="btn btn-dark btn-block">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

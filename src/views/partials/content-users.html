@@ -1,0 +1,122 @@
+<% let selector = ""; %>
+
+<div class="row" id="content-users"<%= selector %>>
+  <div class="col-md-12 mx-auto">
+    <div class="card">
+      <div class="card-header">
+        
+        <div class="form-buscador">
+          <input
+            type="text"
+            class="form-control"
+            id="buscadorUser"
+            name="buscadorUser"
+            placeholder="Busque a algun compañero"
+            required="required"
+          />
+          <i class="fas fa-search iconSearch"></i>
+        </div>
+      </div>
+      <div class="card-body card-users">
+        <div class="container-users">
+          <div class="todouserhistory">
+            <div class="users-history">
+              <% let varUserColor = ""; %>
+              <h3 class="titulousers">Usuarios Conectados (<%= dataUsers.length %>)</h3>
+              <hr style="color: black; background: black; font-weight: bold;" />
+              <% for(let i=0; i<dataUsers.length; i++) { %>
+              <% if(i%2 == 0) { %>
+              <% varUserColor=" variarColorUser" %>
+              <% } else { %>
+              <% varUserColor="" %>  
+              <% } %>
+              <div class="contenidousers">
+                <div class="subcontenidousers<%= varUserColor %>">
+                  <div class="cotenidoimguser">
+                    <img
+                      class="imguser_mini"
+                      id="imageuser<%= i %>"
+                      src="<%= dataUsers[i].foto %>"
+                    />
+                  </div>
+                  <div class="nomuser">
+                    <strong id="user<%= i %>"><%= dataUsers[i].nombre %></strong>
+                  </div>
+                </div>
+                <!--<button
+                  type="button"
+                  id="<%= i %>"
+                  class="popover1"
+                  dataUsers-container="body"
+                  dataUsers-toggle="popover"
+                  dataUsers-placement="left"
+                  dataUsers-trigger="focus"
+                  dataUsers-content="Enviar mensaje"
+                >
+                  <i class="far fa-comment-dots" aria-hidden="true"></i>
+                </button>-->
+              </div>
+              
+              <% } %>
+             <!--<h3 class="titulousers">Usuarios Conectados (2)</h3>
+              <hr />
+              <div class="contenidousers">
+                <div class="subcontenidousers">
+                  <div class="cotenidoimguser">
+                    <img
+                      class="imguser_mini"
+                      id="imageuser1"
+                      src="img/User2.png"
+                    />
+                  </div>
+                  <div class="nomuser">
+                    <strong id="user1">Cotito</strong>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  id="1"
+                  class="popover1"
+                  dataUsers-container="body"
+                  dataUsers-toggle="popover"
+                  dataUsers-placement="left"
+                  dataUsers-trigger="focus"
+                  dataUsers-content="Enviar mensaje"
+                >
+                  <i class="far fa-comment-dots" aria-hidden="true"></i>
+                </button>
+                <div class="subcontenidousers">
+                  <div class="cotenidoimguser">
+                    <img
+                      class="imguser_mini"
+                      id="imageuser2"
+                      src="img/user.png"
+                    />
+                  </div>
+                  <div class="nomuser">
+                    <strong id="user2">Jose</strong>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  id="2"
+                  class="popover1"
+                  dataUsers-container="body"
+                  dataUsers-toggle="popover"
+                  dataUsers-placement="left"
+                  dataUsers-trigger="focus"
+                  dataUsers-content="Enviar mensaje"
+                >
+                  <i class="far fa-comment-dots" aria-hidden="true"></i>
+                </button>
+              </div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div class="card-footer">
+        
+      </div>-->
+    </div>
+  </div>
+</div>
