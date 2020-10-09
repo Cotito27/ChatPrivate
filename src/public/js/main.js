@@ -40,7 +40,7 @@ $(document).ready(function () {
       $(".card-history").css("max-height", $(window).height() - 98 + "px");
     }
   }
-  const fotoDefault = "/img/user.PNG" || "/img/user.png";
+  const fotoDefault = "/img/user.PNG";
   let destinoOrigin = $(".title-destino").html();
   let redirec = ["config", "history", "users", "message", "history"];
   function statusSelected() {
