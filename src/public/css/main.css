@@ -63,10 +63,10 @@ body {
 
   padding: 0;
   margin: 0;
-  max-width: 100%;
+  max-width: 20000px;
   width: 100%;
-  min-width: 100%;
-  overflow-x: hidden;
+
+  overflow: hidden;
 }
 .form-buscador {
   display: flex;
@@ -276,6 +276,7 @@ hr {
 .messageschatnoti {
   padding: 10px;
   border-bottom: 1px solid rgb(190, 190, 190);
+  position: relative;
 }
 .fa-chevron-right {
   float: right;
@@ -283,14 +284,28 @@ hr {
   color: rgb(140, 140, 140);
   cursor: pointer;
 }
-.messageschatnoti:hover,
-.contenidotitulo:hover {
-  background: rgb(249, 249, 249) !important;
+
+.fa-comment,
+.fa-user-friends,
+.fa-cog {
   cursor: pointer;
 }
 
+.messageschatnoti:hover,
+.contenidotitulo:hover {
+  background: rgb(241, 241, 241) !important;
+  cursor: pointer;
+}
+
+.messageschatnoti:active,
+.contenidotitulo:active,
+.messageschatnoti:focus,
+.contenidotitulo:focus {
+  background: rgb(150, 150, 150) !important;
+}
+
 .newMessage {
-  background: rgb(235, 235, 235);
+  background: rgb(215, 215, 215);
 }
 
 .chatnotify {
@@ -502,9 +517,19 @@ input[type="file"]#imagefile::before {
   height: 80%;
   width: 17%;
 }
+.othercontenidomessage {
+  word-break: break-word;
+}
 input[type="file"]#file {
   width: 0;
   position: relative;
+}
+.myNumberNoti {
+  position: absolute;
+  font-weight: bold;
+  right: 10px;
+  top: 10px;
+  display: none;
 }
 .imagefile {
   display: none;
@@ -512,6 +537,12 @@ input[type="file"]#file {
 @media only screen and (max-width: 550px) {
   .container {
     padding: 0 !important;
+    width: 100vw !important;
+    height: 104vh !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    overflow: hidden;
   }
   .card-message {
     height: calc(100vh - 202px);
@@ -523,6 +554,7 @@ input[type="file"]#file {
     height: calc(100vh - 127px);
     max-height: calc(100vh - 127px);
   }
+
   .card-config {
     height: calc(100vh - 129px);
     max-height: calc(100vh - 129px);

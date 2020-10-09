@@ -39,6 +39,11 @@ contobj = functions.listarUsersExist(userexist, objUsers);
 //codigoMessage = functions.obtenerTodos();
 async function obtenerTodos() {
   let valor = await db.getAll();
+  //console.log(valor);
+  if(!valor) {
+    codigoMessage = 0;
+    return;
+  }
   let size = Promise.resolve(valor).then((value) => {
     if(value.messages == undefined) {
       codigoMessage = 0;
@@ -57,7 +62,7 @@ obtenerTodos();
 module.exports = [
   (io) => {
     io.on("connection", async (socket) => {
-
+   
       console.log("conectado");
       
       socket.on("userConnect", function (data) {
@@ -174,7 +179,7 @@ module.exports = [
       socket.on("selectedHistory", function(data) {
         selectedHistory.length = 0;
         selectedHistory.push(data);
-        console.log(selectedHistory);
+        //console.log(selectedHistory);
         
       });
 

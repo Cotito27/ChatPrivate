@@ -102,6 +102,16 @@ $(document).ready(function () {
   }
   console.log(sessionStorage.selected);
   statusSelected();
+  if(sessionStorage.sonido=="nosound"){
+    $('#defaultCheck1').prop('checked', false);
+  }else{
+    $('#defaultCheck1').prop('checked', true);
+  }
+  if(sessionStorage.foto) {
+    $("#imgUserConfig,.imgRegister").attr("src", sessionStorage.foto);
+  }
+  
+  //verificarSonido();
   let varDestino;
   function estadoMenu() {
     if (
@@ -193,9 +203,11 @@ $(document).ready(function () {
     }
     actualizarSelectMenu();
   });
-  function backPanelMessages() {
+  function backPanelMessages(data) {
     $(".btn-prepanel").click(function () {
-      
+      if(data) {
+        $('.panel-message').hide();
+      }
       for (let i = 0; i < redirec.length; i++) {
         if (redirec[i] == "history") {
           $(`#content-${redirec[i]}`).show();
@@ -210,7 +222,7 @@ $(document).ready(function () {
       actualizarSelectMenu();
     });
   }
-  backPanelMessages();
+  backPanelMessages(false);
   function nextPanelMessages(data) {
     $(".messageschatnoti").click(function () {
       if(data) {
@@ -240,7 +252,20 @@ $(document).ready(function () {
         //$('.panel-message').hide();
         $('#content-message').show();
         console.log(idHistory);
-        
+
+        let $msgNewNumber = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti');
+        if($msgNewNumber) {
+          $msgNewNumber.hide();
+          numberNoti-=parseInt($msgNewNumber.text());
+          $msgNewNumber.text('0');
+          numberUnic = 0;
+          if(numberNoti > 0) {
+            $('.numberNoti').text(numberNoti);
+          } else {
+            $('.numberNoti').hide();
+          }
+        }
+        $(this).removeClass('newMessage');
       }
       bajarScroll();
       destinoOrigin = $(".title-destino").html();
@@ -253,8 +278,8 @@ $(document).ready(function () {
       $(`#content-message`).addClass('selectedItem');
       $('#content-history').removeClass('selectedItem');
       actualizarSelectMenu();
-      numberNoti = 0;
-      $('.numberNoti').hide();
+      //numberNoti = 0;
+      //$('.numberNoti').hide();
     });
   }
   nextPanelMessages(true);
@@ -299,7 +324,7 @@ $(document).ready(function () {
       console.log(data);
       for (let i = 0; i < data.length; i++) {
         console.log(user, data[i].user);
-        if (data[i].user != user || data[i].password != pass) {
+        if (data[i].user.toUpperCase() != user.toUpperCase() || data[i].password != pass) {
         } else {
           nomUser = data[i].nombres;
           respuesta = true;
@@ -465,8 +490,8 @@ $(document).ready(function () {
       $(".popover1").on("shown.bs.popover", function () {
         $(".popover-body").click(function () {
           console.log("panel");
-          numberNoti = 0;
-          $('.numberNoti').hide();
+          //numberNoti = 0;
+          //$('.numberNoti').hide();
           addPanel(data, iduser);
         });
       });
@@ -510,6 +535,7 @@ $(document).ready(function () {
       });
     }
     $(".textMessage").val("");
+    $(".textMessage").focus();
   }
   
   function addEventsMessage() {
@@ -596,10 +622,11 @@ $(document).ready(function () {
           codPri = userOrigin[i].id;
         }
       }
-      if($(`.${data.destino}`)[0]) {
-        $(`.${data.destino}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
-      }
+      
         if (data.username == sessionStorage.username) {
+          if($(`.${data.destino}`)[0]) {
+            $(`.${data.destino}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
+          }
           $(`#${data.destino}`).append(`
             <div id="mensaje${data.id}" class="identMessage mymessage">
             <div class="contenidoimg">
@@ -633,13 +660,15 @@ $(document).ready(function () {
               <small class="hora">${data.date}</small>
               </div>
             </div>`);
-            addSound();
+            if(sessionStorage.sonido == "sound") {
+              addSound();
+            }
         }
         if(sessionStorage.username == data.destino || data.destino == data.username) {
           
-          if($(`.${data.username}`)[0]) {
+          /*if($(`.${data.username}`)[0]) {
             $(`.${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
-          }
+          }*/
           if (data.username == sessionStorage.username) {
            
           $(`#${data.username}`).append(`
@@ -678,7 +707,10 @@ $(document).ready(function () {
                 <small class="hora">${data.date}</small>
                 </div>
               </div>`);
-              addSound();
+              if(sessionStorage.sonido == "sound") {
+                addSound();
+              }
+              
           }
         }
         if(data.destino == "Todos") {
@@ -696,6 +728,7 @@ $(document).ready(function () {
               <strong class="name-user-history" id="username">${"Todos"}</strong>
               <div class="messagenofocus">
               <p class="contenidomessagenofocus">${data.message}</p>
+                <small class="myNumberNoti codigoNumber${data.id}">0</small>
                 <i class="fas fa-chevron-right"></i>
               </div>
             </div>
@@ -707,15 +740,36 @@ $(document).ready(function () {
           nextPanelMessages(false);
           resizePage();
           if($(`#panelM`).is(':hidden')) {
-            $(`#userhistory-1`).addClass('newMessage');
-            numberNoti++;
-            $('.numberNoti').text(numberNoti);
-            $('.numberNoti').show();
-            $(`#userhistory-1`).click(function() {
-              $(this).removeClass('newMessage');
+            $(`#userhistory-1`).each(function() {
+              $(this).addClass('newMessage');
+              if(numberNoti<=0){
+                numberNoti+=numberUnic;
+              }
+              numberNoti++;
+              $('.numberNoti').text(numberNoti);
+              $('.numberNoti').show();
+              if(historyNumber == data.id || historyNumber == "") {
+                numberUnic = 0;
+                numberUnic++;
+                $(`.codigoNumber${data.id}`).text(numberUnic);
+                $(`.codigoNumber${data.id}`).show();
+                //$('.myNumberNoti').text(numberUnic);
+              } else {
+                
+                numberUnic++;
+                $(`.codigoNumber${data.id}`).text(numberUnic);
+                $(`.codigoNumber${data.id}`).show();
+                //$('.myNumberNoti').text(numberUnic);
+              }
+              historyNumber = data.id;
             });
-            addSound();
             
+            if(sessionStorage.username != data.username){
+              if(sessionStorage.sonido == "sound") {
+                addSound();
+              }
+            }
+ 
           }
         }
         
@@ -723,6 +777,7 @@ $(document).ready(function () {
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
           $(`#userhistory${codPri}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
+        console.log('Llego');
         }
         $('.res-message').each(function() {
           $(this).text($(this).html());
@@ -841,9 +896,22 @@ $(document).ready(function () {
   $("#eliminarFoto").click(function () {
     $("#imgUserConfig").attr("src", fotoDefault);
   });
-  $("#guardarCambios").click(function () {
-    sessionStorage.foto = $("#imgUserConfig").attr("src");
+  $("#guardarCambios").click(async function () {
+    sessionStorage.foto = await $("#imgUserConfig").attr("src");
+    verificarSonido();
+    (async() => {
+      //swal("Success!", "Se han guardado los cambios ", "success");
+      swal("Success!", "Se han guardado exitosamente los cambios!", "success");
+    })();
+    //console.log(sessionStorage.foto);
   });
+  function verificarSonido() {
+    if($('#defaultCheck1').prop('checked')){
+      sessionStorage.sonido="sound";
+    } else {
+      sessionStorage.sonido="nosound";
+    }
+  }
   function actualizarHistory(data) {
     var html = "";
     if (data == null) {
@@ -1025,6 +1093,8 @@ $(document).ready(function () {
       return html;
   }
   let numberNoti = 0;
+  let numberUnic = 0;
+  let historyNumber = "";
   function addPanelOther(data, idAdd) {
     let identuser;
     let imageuser;
@@ -1057,7 +1127,7 @@ $(document).ready(function () {
       $('.components-message').append(html);
       
       
-      backPanelMessages();
+      backPanelMessages(true);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
       compHistory += `<div class="messageschatnoti ${data.username}" id="userhistory${idAdd}">
@@ -1068,6 +1138,7 @@ $(document).ready(function () {
               <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>
               <div class="messagenofocus">
                 <p class="contenidomessagenofocus" id="${identuser}">${finalmessage}</p>
+                <small class="myNumberNoti codigoNumber${idAdd}">0</small>
                 <i class="fas fa-chevron-right"></i>
               </div>
             </div>
@@ -1090,15 +1161,33 @@ $(document).ready(function () {
     nextPanelMessages(false);
     resizePage();
     if($(`#panelM${idAdd}`).is(':hidden')) {
+      
       $(`#userhistory${idAdd}`).addClass('newMessage');
+      if(numberNoti<=0){
+        numberNoti+=numberUnic;
+      }
+      
       numberNoti++;
       $('.numberNoti').text(numberNoti);
       $('.numberNoti').show();
-      $(`#userhistory${idAdd}`).click(function() {
-        $(this).removeClass('newMessage');
-      });
+      if(historyNumber == idAdd || historyNumber == "") {
+        numberUnic++;
+        $(`.codigoNumber${idAdd}`).text(numberUnic);
+        $(`.codigoNumber${idAdd}`).show();
+        //$('.myNumberNoti').text(numberUnic);
+      } else {
+        numberUnic = 0;
+        numberUnic++;
+        $(`.codigoNumber${idAdd}`).text(numberUnic);
+        $(`.codigoNumber${idAdd}`).show();
+        //$('.myNumberNoti').text(numberUnic);
+      }
+      historyNumber = idAdd;
     } 
     
+    /*$(`.messageschatnoti`).click(function() {
+      
+    });*/
     
     /* $('.messageschatnoti').attr('style',`padding: 10px;
   border: 1px solid rgb(190,190,190);`);
@@ -1143,7 +1232,7 @@ $(document).ready(function () {
       $('.components-message').append(html);
       
       
-      backPanelMessages();
+      backPanelMessages(false);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
       
@@ -1156,6 +1245,7 @@ $(document).ready(function () {
                 <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>
                 <div class="messagenofocus">
                   <p class="contenidomessagenofocus" id="${identuser}">${finalmessage}</p>
+                  <small class="myNumberNoti codigoNumber${idAdd}">0</small>
                   <i class="fas fa-chevron-right"></i>
                 </div>
               </div>
@@ -1172,9 +1262,26 @@ $(document).ready(function () {
     $('.panel-message').hide();
     $(`#panelM${idAdd}`).show();
     sessionStorage.selected = "message";
-    if($(`#userhistory${idAdd}`).hasClass('newMessage')) {
-      $(`#userhistory${idAdd}`).removeClass('newMessage');
-    }
+    $(`#userhistory${idAdd}`).each(function() {
+      if($(this).hasClass('newMessage')) {
+        let $msgNewNumber = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti');
+          if($msgNewNumber) {
+            $msgNewNumber.hide();
+            numberNoti-=parseInt($msgNewNumber.text());
+            $msgNewNumber.text('0');
+            numberUnic = 0;
+            if(numberNoti > 0) {
+              $('.numberNoti').text(numberNoti);
+            } else {
+              $('.numberNoti').hide();
+            }
+          }
+        
+          $(this).removeClass('newMessage');
+      }
+    });
+    
+    
     nextPanelMessages(false);
     resizePage();
     /* $('.messageschatnoti').attr('style',`padding: 10px;

@@ -28,10 +28,10 @@ router.get('/', async (req, res) => {
     //console.log(selectedHistory);
     if(oldMessages) {
       res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-login', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: oldMessages[oldMessages.length-1], selectedHistory });
-    console.log(req.body);
+    //console.log(req.body);
     } else {
       res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-login', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [{}], selectedHistory });
-    console.log(req.body);
+    //console.log(req.body);
     }
     
 });
@@ -80,7 +80,13 @@ router.post('/page-history', (req, res) => {
 });*/
 
 router.get('/page-register', (req, res) => {
-  res.render('index.html', { title: 'Chat Web',content: req.body || 'page-message', redirect: 'page-register', validado: req.body, dataMessages: oldMessages, dataUsers: usersOnline });
+  if(oldMessages) {
+    res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-register', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: oldMessages[oldMessages.length-1], selectedHistory });
+  //console.log(req.body);
+  } else {
+    res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-register', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [{}], selectedHistory });
+  //console.log(req.body);
+  }
 });
 
 router.post('/page-register', (req, res) => {
