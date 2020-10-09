@@ -1,0 +1,28 @@
+{
+  "listusers": [
+    {
+      "id": 1,
+      "user": "jesus",
+      "password": "123",
+      "nombres": "jesus"
+    },
+    {
+      "id": 2,
+      "user": "admin",
+      "password": "123",
+      "nombres": "jesus"
+    },
+    {
+      "id": 3,
+      "user": "luis",
+      "password": "123",
+      "nombres": "luis"
+    },
+    {
+      "id": 4,
+      "user": "marcos",
+      "password": "123",
+      "nombres": "marcos"
+    }
+  ]
+}
