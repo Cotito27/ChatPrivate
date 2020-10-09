@@ -39,14 +39,14 @@ contobj = functions.listarUsersExist(userexist, objUsers);
 //codigoMessage = functions.obtenerTodos();
 async function obtenerTodos() {
   let valor = await db.getAll();
-  if(valor.messages == undefined) {
-    codigoMessage = 0;
-    return;
-  }
-  let size = Promise.resolve(valor.messages.length).then((value) => {
-    console.log(value);
+  let size = Promise.resolve(valor).then((value) => {
+    if(value.messages == undefined) {
+      codigoMessage = 0;
+      return;
+    }
+    console.log(value.messages.length);
     if(value != undefined){
-      codigoMessage = value;
+      codigoMessage = value.messages.length;
     } else {
      
     }
