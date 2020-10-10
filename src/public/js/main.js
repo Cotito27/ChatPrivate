@@ -306,13 +306,35 @@ $(document).ready(function () {
       sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
     }
   });
+  let listaUsers = [];
+  socket.on("obtenerLista", function(data) {
+    listaUsers = data;
+    console.log(listaUsers);
+  });
+
   function registrarUsuario(nom, user, pass) {
+    
     console.log(nom, user, pass);
-    socket.emit("addUser", {
-      nombre: nom,
-      username: user,
-      password: pass,
-    });
+    var respuesta = true;
+        for (let i = 0; i < listaUsers.length; i++) {
+          if (listaUsers[i].user == user) {
+            respuesta = false;
+          }
+        }
+        if (respuesta) {
+          socket.emit("addUser", {
+            nombre: nom,
+            username: user,
+            password: pass,
+          });
+        } else {
+          (async() => {
+            //swal("Success!", "Se han guardado los cambios ", "success");
+            swal("Error!", "Este usuario ya existe :(", "error");
+          })();
+          $('#formRegister')[0].reset();
+        }
+    
     //socket.emit('actualizarCod');
   }
   function validarUsuario(user, pass) {
@@ -344,7 +366,9 @@ $(document).ready(function () {
         //location.href="/"+sessionStorage.username;
         location.reload();
       } else {
-        return;
+        swal("Error!", "Datos Incorrectos, verifique que se haya registrado", "error");
+        $('#formLogin')[0].reset();
+        //return;
       }
     });
   }

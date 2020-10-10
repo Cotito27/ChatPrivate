@@ -64,7 +64,7 @@ module.exports = [
     io.on("connection", async (socket) => {
    
       console.log("conectado");
-      
+      socket.emit("obtenerLista", userexist.listusers);
       socket.on("userConnect", function (data) {
         
         //socket.join(data.username);
