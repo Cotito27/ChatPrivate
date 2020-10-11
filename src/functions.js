@@ -20,16 +20,17 @@ module.exports = {
   guardarMessages: async function (data) {
     await db
       .set("messages", data)
-      .then(console.log("Mensaje enviado"))
+      .then(() => console.log("Mensaje enviado"))
       .catch((err) => {
         console.log(err);
       });
   },
 
   actualizarMessages: async function () {
+    let object;
     let key = await db
       .get("messages")
-      .then(console.log("Mensaje recibido"))
+      .then()
       .catch((err) => {
         console.log(err);
       });
@@ -54,7 +55,7 @@ module.exports = {
   generarCodigoNuevo: async function (codigoglobal) {
     await jsonfile
       .writeFile("./codigo.json", codigoglobal, { spaces: 2 })
-      .then(console.log("Codigo Exitoso"))
+      .then(() => console.log("Codigo Exitoso"))
       .catch((err) => {
         console.log(err);
       });
@@ -69,7 +70,7 @@ module.exports = {
     });
     await jsonfile
       .writeFile("lista-users.json", objUsers, { spaces: 2 })
-      .then(console.log("Usuario Exitoso"))
+      .then(() => console.log("Usuario Exitoso"))
       .catch((err) => {
         console.log(err);
       });

@@ -17,6 +17,7 @@ let newMessages = [];
 router.get('/', async (req, res) => {
     //console.log(oldMessages);
       oldMessages = await varEnv.oldMessages.then(console.log('Mensajes obtenidos')).catch((err) => {console.log(err)});
+      //console.log(oldMessages);
       if(messages.length != undefined){
         if(messages.length>=1){
           oldMessages = messages;
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
       res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-login', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: oldMessages[oldMessages.length-1], selectedHistory });
     //console.log(req.body);
     } else {
-      res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-login', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [{}], selectedHistory });
+      res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-login', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [], selectedHistory });
     //console.log(req.body);
     }
     
@@ -84,7 +85,7 @@ router.get('/page-register', (req, res) => {
     res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-register', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: oldMessages[oldMessages.length-1], selectedHistory });
   //console.log(req.body);
   } else {
-    res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-register', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [{}], selectedHistory });
+    res.render('index.html', { title: 'Chat Web', content: 'page-message', validado: req.body, redirect: 'page-register', dataMessages: oldMessages, dataUsers: usersOnline , userDefault: uuid, userHistory: [], selectedHistory });
   //console.log(req.body);
   }
 });

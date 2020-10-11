@@ -6,6 +6,8 @@
   location.href = location.origin;
 }*/
 
+//const { usersOnline } = require("../../variables");
+
 /*if(sessionStorage.username) {
   if(!location.href.includes(sessionStorage.username)){
     location.href = '/'+sessionStorage.username;
@@ -40,7 +42,7 @@ $(document).ready(function () {
       $(".card-history").css("max-height", $(window).height() - 98 + "px");
     }
   }
-  const fotoDefault = "/img/user.PNG";
+  const fotoDefault = "/img/avatar-login3.png";
   let destinoOrigin = $(".title-destino").html();
   let redirec = ["config", "history", "users", "message", "history"];
   function statusSelected() {
@@ -102,6 +104,9 @@ $(document).ready(function () {
   }
   console.log(sessionStorage.selected);
   statusSelected();
+  if(!sessionStorage.sonido) {
+    sessionStorage.sonido = "sound";
+  }
   if(sessionStorage.sonido=="nosound"){
     $('#defaultCheck1').prop('checked', false);
   }else{
@@ -110,7 +115,33 @@ $(document).ready(function () {
   if(sessionStorage.foto) {
     $("#imgUserConfig,.imgRegister").attr("src", sessionStorage.foto);
   }
-  
+  /*if(sessionStorage.username && sessionStorage.nombre) {
+    socket.emit("userConnect", {
+      username: sessionStorage.username,
+      nombre: sessionStorage.nombre,
+      foto: sessionStorage.foto || fotoDefault,
+    });
+  }*/
+  function optionsToast() {
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "3000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+  }
+  optionsToast();
   //verificarSonido();
   let varDestino;
   function estadoMenu() {
@@ -309,7 +340,7 @@ $(document).ready(function () {
   let listaUsers = [];
   socket.on("obtenerLista", function(data) {
     listaUsers = data;
-    console.log(listaUsers);
+    //console.log(listaUsers);
   });
 
   function registrarUsuario(nom, user, pass) {
@@ -502,9 +533,37 @@ $(document).ready(function () {
     return html;
   }
   var iduser = 0;
+  let replaceuser = "";
+  let replaceuser2 = "";
   function actualizarUsers() {
     socket.on("userConnect", function (data) {
+      
+      let verificar;
+      if(data != [] && data) {
+        verificar = data[data.length-1].username;
+      } else {
+        verificar = data[0].username;
+      }
+      let userlast = "";
       let html = updateUsers(data, false);
+      console.log(verificar, sessionStorage.username);
+      if(verificar!=sessionStorage.username){
+        for(let i=0; i<data.length; i++) {
+          if(data[i].username == verificar) {
+            userlast = data[i].nombre;
+          }
+        }
+        //contadoruserlast++;
+        if($('.toast')[0]){
+        if(!$('.toast').html().includes(`<strong>${replaceuser}</strong> se ha unido al chat.`)){
+          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`); 
+          replaceuser=userlast.toUpperCase();
+        }
+        }else{
+          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`);
+          replaceuser=userlast.toUpperCase();
+        }
+      }
       $(".users-history").html(html);
       userOrigin = data;
       $(".popover1").click(function () {
@@ -621,11 +680,30 @@ $(document).ready(function () {
     
   }
   addEventsMessage();
+  let codSound = 0;
+  let vecSound = [];
   function addSound() {
-    let audio = document.getElementById("audio");
+    let audio = document.createElement('audio');
+    audio.className = "fotoUser-"+sessionStorage.username+codSound;
+    vecSound.push(codSound);
+    codSound++;
+    audio.src = "../audio/samsung-sound.mp3";
+    $('body').append(audio);
     audio.play();
+      for(let i=0; i<vecSound.length; i++) {
+        $(`.fotoUser-${sessionStorage.username}${vecSound[i]}`).bind('ended', function(){
+          $(`.fotoUser-${sessionStorage.username}${vecSound[i]}`).remove();
+        });
+      }
   }
   let userOrigin;
+  function verificarFocusHistory() {
+    socket.on('focusHistory', function() {
+      $('.row').hide();
+      $('#content-history').show();
+    });
+  }
+  verificarFocusHistory();
   function obtenerMensajes() {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
@@ -652,7 +730,7 @@ $(document).ready(function () {
             $(`.${data.destino}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
           }
           $(`#${data.destino}`).append(`
-            <div id="mensaje${data.id}" class="identMessage mymessage">
+            <div id="mensaje${data.id}" class="identMessage mymessage message${data.username}">
             <div class="contenidoimg">
             <img class="imguser" src="${data.foto}">
             </div>
@@ -671,7 +749,7 @@ $(document).ready(function () {
         } else {
           
           $(`#${data.destino}`).append(`
-          <div id="mensaje${data.id}" class="identMessage othermessage">
+          <div id="mensaje${data.id}" class="identMessage othermessage message${data.username}">
               <div class="contenidoimg">
                <img class="imguser" src="${data.foto}">
               </div>
@@ -696,7 +774,7 @@ $(document).ready(function () {
           if (data.username == sessionStorage.username) {
            
           $(`#${data.username}`).append(`
-                <div id="mensaje${data.id}" class="identMessage mymessage">
+                <div id="mensaje${data.id}" class="identMessage mymessage message${data.username}">
                 <div class="contenidoimg">
                 <img class="imguser" src="${data.foto}">
                 </div>
@@ -714,11 +792,11 @@ $(document).ready(function () {
             if(!$(`#${data.destino}`)[0]) {
               //data.username = data.destino;
               addPanelOther(data, codPri);
-              console.log('xd22222');
+              //console.log('xd22222');
              }
              
             $(`#${data.username}`).append(`
-            <div id="mensaje${data.id}" class="identMessage othermessage">
+            <div id="mensaje${data.id}" class="identMessage othermessage message${data.username}">
                 <div class="contenidoimg">
                  <img class="imguser" src="${data.foto}">
                 </div>
@@ -743,10 +821,10 @@ $(document).ready(function () {
             $(`#userhistory-1`).remove();
           }
           let compHistory = "";
-            compHistory += `<div class="messageschatnoti Todos" id="userhistory-1">
+            compHistory += `<div class="messageschatnoti Todos message${data.username}" id="userhistory-1">
 
             <div class="contenidoimg">
-              <img class="imguser" src="${data.foto}" />
+              <img class="imguser imghistory" src="${data.foto}" />
             </div>
             <div class="contenidochatmessages">
               <strong class="name-user-history" id="username">${"Todos"}</strong>
@@ -796,8 +874,20 @@ $(document).ready(function () {
  
           }
         }
-        
-        console.log($(`#panelM`).is(':hidden'));
+        if(sessionStorage.username != data.username) {
+          if($(`.panel-message`).is(':hidden')) {
+            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> te ha enviado un mensaje.</div>`);
+          }
+        }
+        $('.mensajeOtherNoti').each(function() {
+          $(this).click(function() {
+            socket.emit('focusHistory');
+              /*$('.row').hide();
+              $('#content-history').show();*/
+            
+          });
+        });
+        //console.log($(`#panelM`).is(':hidden'));
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
           $(`#userhistory${codPri}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
@@ -806,10 +896,10 @@ $(document).ready(function () {
         $('.res-message').each(function() {
           $(this).text($(this).html());
         });
-        console.log("userhistory"+data.id);
-      console.log(data.destino, sessionStorage.username);
+        //console.log("userhistory"+data.id);
+      //console.log(data.destino, sessionStorage.username);
       
-      console.log(data.destino, data.username);
+      //console.log(data.destino, data.username);
       
       actualizarHistory(data);
       if (confirmador) {
@@ -886,24 +976,44 @@ $(document).ready(function () {
   function userDisconnect() {
     socket.on("disconnect", function () {
       sessionStorage.username = "";
+      sessionStorage.foto = fotoDefault;
+    });
+    socket.on("userDisconnect", function(user) {
+      let userlast = "";
+      console.log("desconectado");
+      for(let i=0; i<userOrigin.length; i++) {
+        if(userOrigin[i].username == user) {
+          userlast = userOrigin[i].nombre;
+        }
+      }
+      console.log(userlast);
+      if($('.toast')[0]){
+        if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
+        Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
+        replaceuser2=userlast.toUpperCase();
+      }
+      }else{
+        Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
+        replaceuser2=userlast.toUpperCase();  
+      }
     });
   }
   userDisconnect();
-  function changeFoto(e, imgFoto) {
+  async function changeFoto(e, imgFoto) {
     let reader = new FileReader();
 
     // Leemos el archivo subido y se lo pasamos a nuestro fileReader
-    reader.readAsDataURL(e.target.files[0]);
+    await reader.readAsDataURL(e.target.files[0]);
 
     // Le decimos que cuando este listo ejecute el código interno
-    reader.onload = function () {
+    reader.onload = async function () {
       let image = document.createElement("img");
       identif = 0;
       identif2 = 0;
       identif3 = 0;
       image.src = reader.result;
       if (/\.(jpeg|jpg|png|gif)$/i.test(e.target.files[0].name)) {
-        imgFoto.src = image.src;
+        imgFoto.src = await image.src;
       } else {
         alert("El archivo debe ser una imagen");
       }
@@ -920,8 +1030,28 @@ $(document).ready(function () {
   $("#eliminarFoto").click(function () {
     $("#imgUserConfig").attr("src", fotoDefault);
   });
+  socket.emit('cambiarFoto', {
+    username: sessionStorage.username,
+    foto: sessionStorage.foto
+  });
+  function detectarCambioFoto() {
+    socket.on('cambiarFoto', function(data) {
+      $(`.message${data.username}`).each(function() {
+        $(this).find('.contenidoimg').find('.imguser').attr('src',data.foto);
+      });
+    });
+  }
+  detectarCambioFoto();
   $("#guardarCambios").click(async function () {
     sessionStorage.foto = await $("#imgUserConfig").attr("src");
+    socket.emit('cambiarFoto', {
+      username: sessionStorage.username,
+      foto: sessionStorage.foto
+    });
+    /*$(`.message${sessionStorage.username}`).each(function() {
+      $(this).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
+    });*/
+
     verificarSonido();
     (async() => {
       //swal("Success!", "Se han guardado los cambios ", "success");
@@ -941,7 +1071,7 @@ $(document).ready(function () {
     if (data == null) {
       html += `
         <div class="contenidoimg">
-          <img class="imguser" src="${fotoDefault}" />
+          <img class="imguser imghistory" src="${fotoDefault}" />
         </div>
         <div class="contenidochatmessages">
           <strong class="name-user-history">${"Todos"}</strong>
@@ -999,21 +1129,32 @@ $(document).ready(function () {
     });
   }
   detectarLogin();
+  //$('.imghistory').attr('src','');
   function actualizarMensajes() {
     socket.emit("updateMessages");
     socket.on("updateMessages", function (data) {
       //console.log(data);
       let html = "";
+      //console.log(data);
       if (data) {
         for (let i = 0; i < data.length; i++) {
-          //console.log(data[i].username, sessionStorage.username);
+        
+          console.log(data[i].username, sessionStorage.username);
           if (sessionStorage.username && data[i].username) {
+           
             if (data[i].username == sessionStorage.username) {
               
               if($(`#mensaje${data[i].id}`)[0]){
                 $(`#mensaje${data[i].id}`)
                 .removeClass("othermessage")
                 .addClass("mymessage");
+                //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
+              }
+              if($(`.message${data.username}`)[0]) {
+                $(`.message${data.username}`).each(function() {
+                  $(this).removeClass("othermessage")
+                  .addClass("mymessage");
+                });         
               }
               bajarScroll();
               //console.log('xd');
@@ -1022,6 +1163,13 @@ $(document).ready(function () {
               $(`#mensaje${data[i].id}`)
                 .removeClass("mymessage")
                 .addClass("othermessage");
+                //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
+              }
+              if($(`.message${data.username}`)[0]) {
+                $(`.message${data.username}`).each(function() {
+                  $(this).removeClass("othermessage")
+                  .addClass("mymessage");
+                });         
               }
             }
           }
@@ -1154,9 +1302,9 @@ $(document).ready(function () {
       backPanelMessages(true);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
-      compHistory += `<div class="messageschatnoti ${data.username}" id="userhistory${idAdd}">
+      compHistory += `<div class="messageschatnoti ${data.username} message${data.username}" id="userhistory${idAdd}">
       <div class="contenidoimg">
-        <img class="imguser" src="${imageuser}">
+        <img class="imguser imghistory" src="${imageuser}">
         </div>
             <div class="contenidochatmessages">
               <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>
@@ -1263,7 +1411,7 @@ $(document).ready(function () {
       $(".chatnotify")
         .append(`<div class="messageschatnoti ${destinoFinal}" id="userhistory${idAdd}">
         <div class="contenidoimg">
-          <img class="imguser" src="${imageuser}">
+          <img class="imguser imghistory" src="${imageuser}">
           </div>
               <div class="contenidochatmessages">
                 <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>

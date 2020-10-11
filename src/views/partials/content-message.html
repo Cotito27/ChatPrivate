@@ -13,7 +13,7 @@
           for(let i=0; i<dataMessages.length; i++) { %>
           <% if(dataMessages[i].username){
           if(dataMessages[i].username.toUpperCase() == changeUser) { %>
-            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage mymessage">
+            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage mymessage message<%= dataMessages[i].username %>">
               <div class="contenidoimg">
               <img class="imguser" src="<%= dataMessages[i].foto %>">
               </div>
@@ -28,7 +28,7 @@
               <label id="<%= dataMessages[i].id %>"><i class="fas fa-check icon-ready"></i></label>
             </div>
           <% } else { %>
-            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage">
+            <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage message<%= dataMessages[i].username %>">
               <div class="contenidoimg">
                <img class="imguser" src="<%= dataMessages[i].foto %>">
               </div>

@@ -37,32 +37,23 @@ contobj = functions.listarUsersExist(userexist, objUsers);
       console.log('Marca: ',key[i].marca);
     }*/
 //codigoMessage = functions.obtenerTodos();
-async function obtenerTodos() {
-  let valor = await db.getAll();
-  //console.log(valor);
-  if(!valor) {
-    codigoMessage = 0;
-    return;
-  }
-  let size = Promise.resolve(valor).then((value) => {
-    if(value.messages == undefined) {
-      codigoMessage = 0;
-      return;
-    }
-    console.log(value.messages.length);
-    if(value != undefined){
-      codigoMessage = value.messages.length;
-    } else {
-     
-    }
-  }).catch((err) => {console.log(err)});
+async function actualizarMessages() {
+  let valor = await db.get("messages")
+  .then((value) => {
+    codigoMessage = value[value.length-1].id+1;
+    console.log(codigoMessage);
+  })
+  .catch((err) => {
+    console.log(err);
+  });;
 }
-obtenerTodos();
-
+//obtenerTodos();
+actualizarMessages();
+//functions.borrarKeys();
 module.exports = [
   (io) => {
     io.on("connection", async (socket) => {
-   
+      
       console.log("conectado");
       socket.emit("obtenerLista", userexist.listusers);
       socket.on("userConnect", function (data) {
@@ -80,6 +71,7 @@ module.exports = [
           socket.username = data.username;
           data.id = codigoIdUser;
           codigoIdUser++;
+          usersOnline.foto = "/img/avatar-login3.png";
           usersOnline.push(data);
         }
 
@@ -119,6 +111,7 @@ module.exports = [
           }
           io.emit("previousMessage", data);
           if(data.destino == "Todos") {
+            messages[messages.length-1].foto = "/img/avatar-login3.png";
             await functions
             .guardarMessages(messages)
             .then()
@@ -137,6 +130,7 @@ module.exports = [
         //console.log(oldMessages);
         oldMessages = varEnv.oldMessages;
         //console.log(oldMessages);
+        //console.log(oldMessages);
         const promise1 = Promise.resolve(oldMessages);
         promise1.then((value) => {
           if (value) {
@@ -154,12 +148,23 @@ module.exports = [
 
       socket.on("disconnect", function () {
         let userdisconnect;
+        let prueba;
         if (socket.username) {
           userdisconnect = socket.username;
-          socket.emit("disconnectUser", userdisconnect);
-          usersOnline.splice(usersOnline.indexOf(socket.username), 1);
-          socket.emit("redirectUser", userdisconnect);
+          //socket.emit("disconnectUser", userdisconnect);
+          for(let i=0; i<usersOnline.length; i++) {
+            if(usersOnline[i].username == userdisconnect) {
+              usersOnline.splice(i, 1)
+            }
+          }
+          console.log(prueba, 'prueba');
           console.log(socket.username, "se ha desconectado");
+        }
+
+        if(userdisconnect!=undefined&&userdisconnect!=null){
+          console.log(userdisconnect);
+          io.emit('userDisconnect',userdisconnect);
+          socket.emit("redirectUser", userdisconnect);
         }
         io.emit("userConnect", usersOnline);
       });
@@ -182,7 +187,12 @@ module.exports = [
         //console.log(selectedHistory);
         
       });
-
+      socket.on("cambiarFoto", function(data) {
+        io.emit("cambiarFoto", data);
+      });
+      socket.on("focusHistory", function() {
+        socket.emit("focusHistory");
+      });
     });
   },
 ];
