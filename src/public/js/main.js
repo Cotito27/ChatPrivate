@@ -255,7 +255,8 @@ $(document).ready(function () {
   }
   backPanelMessages(false);
   function nextPanelMessages(data) {
-    $(".messageschatnoti").click(function () {
+    $(".messageschatnoti").each(function(){
+    $(this).click(function () {
       if(data) {
         for (let i = 0; i < redirec.length; i++) {
           if (redirec[i] == "message") {
@@ -283,19 +284,25 @@ $(document).ready(function () {
         //$('.panel-message').hide();
         $('#content-message').show();
         console.log(idHistory);
-
         let $msgNewNumber = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti');
+        
         if($msgNewNumber) {
-          $msgNewNumber.hide();
-          numberNoti-=parseInt($msgNewNumber.text());
-          $msgNewNumber.text('0');
-          numberUnic = 0;
-          if(numberNoti > 0) {
-            $('.numberNoti').text(numberNoti);
-          } else {
-            $('.numberNoti').hide();
-          }
+            $msgNewNumber.hide();
+            numberNoti-=parseInt($msgNewNumber.text());
+            $msgNewNumber.text('0');
+            if($(this).attr('id') == "userhistory-1") {
+              numberUnic = numberUnic;
+            } else {
+              numberUnic = 0;
+            }
+            
+        if(numberNoti > 0) {
+              $('.numberNoti').text(numberNoti);
+        } else {
+              $('.numberNoti').hide();
         }
+      }
+        
         $(this).removeClass('newMessage');
       }
       bajarScroll();
@@ -312,6 +319,7 @@ $(document).ready(function () {
       //numberNoti = 0;
       //$('.numberNoti').hide();
     });
+  });
   }
   nextPanelMessages(true);
   if (
@@ -841,9 +849,13 @@ $(document).ready(function () {
           sessionStorage.selected = "message";
           nextPanelMessages(false);
           resizePage();
+          
           if($(`#panelM`).is(':hidden')) {
             $(`#userhistory-1`).each(function() {
+              
               $(this).addClass('newMessage');
+              numberUnic = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti').text();
+              console.log(numberUnic);
               if(numberNoti<=0){
                 numberNoti+=numberUnic;
               }
@@ -1342,7 +1354,10 @@ $(document).ready(function () {
       numberNoti++;
       $('.numberNoti').text(numberNoti);
       $('.numberNoti').show();
+      
       if(historyNumber == idAdd || historyNumber == "") {
+        //numberUnic = $(`.codigoNumber${idAdd}`).text();
+        console.log(numberUnic);
         numberUnic++;
         $(`.codigoNumber${idAdd}`).text(numberUnic);
         $(`.codigoNumber${idAdd}`).show();
