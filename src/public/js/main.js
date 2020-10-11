@@ -353,7 +353,7 @@ $(document).ready(function () {
 
   function registrarUsuario(nom, user, pass) {
     
-    console.log(nom, user, pass);
+    //console.log(nom, user, pass);
     var respuesta = true;
         for (let i = 0; i < listaUsers.length; i++) {
           if (listaUsers[i].user == user) {
@@ -382,18 +382,18 @@ $(document).ready(function () {
     socket.on("obtenerUsers", function (data) {
       var respuesta = false;
       var nomUser;
-      console.log(data);
+      //console.log(data);
       for (let i = 0; i < data.length; i++) {
-        console.log(user, data[i].user);
+        //console.log(user, data[i].user);
         if (data[i].user.toUpperCase() != user.toUpperCase() || data[i].password != pass) {
         } else {
           nomUser = data[i].nombres;
           respuesta = true;
         }
       }
-      console.log(respuesta);
+      //console.log(respuesta);
       if (respuesta) {
-        console.log("Logeado");
+        //console.log("Logeado");
         sessionStorage.username = user.toUpperCase();
         sessionStorage.nombre = nomUser.toUpperCase();
         sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
@@ -554,7 +554,7 @@ $(document).ready(function () {
       }
       let userlast = "";
       let html = updateUsers(data, false);
-      console.log(verificar, sessionStorage.username);
+      //console.log(verificar, sessionStorage.username);
       if(verificar!=sessionStorage.username){
         for(let i=0; i<data.length; i++) {
           if(data[i].username == verificar) {
@@ -580,7 +580,7 @@ $(document).ready(function () {
       });
       $(".popover1").on("shown.bs.popover", function () {
         $(".popover-body").click(function () {
-          console.log("panel");
+          //console.log("panel");
           //numberNoti = 0;
           //$('.numberNoti').hide();
           addPanel(data, iduser);
@@ -603,7 +603,7 @@ $(document).ready(function () {
         destino_user = $(this).find('.container-destino').find('input').val();
       }
     });
-    console.log(destino_user,"usuario destino");
+    //console.log(destino_user,"usuario destino");
     
     var dateTime = moment().format("hh:mm a").toUpperCase();
     if (fotoUser == undefined || fotoUser == null || fotoUser == "") {
@@ -635,7 +635,7 @@ $(document).ready(function () {
     $('.textMessage').off('keypress').on('keypress', function (e) {
       if (e.keyCode == 13) {
         e.preventDefault();
-        console.log('Evento!!');
+        //console.log('Evento!!');
         if ($(this).val() != "") {
           enviarMensaje(
             sessionStorage.username,
@@ -682,7 +682,7 @@ $(document).ready(function () {
           }
           
         } */ 
-        console.log("Enviado");
+        //console.log("Enviado");
       });
     
     
@@ -855,7 +855,7 @@ $(document).ready(function () {
               
               $(this).addClass('newMessage');
               numberUnic = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti').text();
-              console.log(numberUnic);
+              //console.log(numberUnic);
               if(numberNoti<=0){
                 numberNoti+=numberUnic;
               }
@@ -903,7 +903,7 @@ $(document).ready(function () {
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
           $(`#userhistory${codPri}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
-        console.log('Llego');
+        //console.log('Llego');
         }
         $('.res-message').each(function() {
           $(this).text($(this).html());
@@ -992,13 +992,13 @@ $(document).ready(function () {
     });
     socket.on("userDisconnect", function(user) {
       let userlast = "";
-      console.log("desconectado");
+      //console.log("desconectado");
       for(let i=0; i<userOrigin.length; i++) {
         if(userOrigin[i].username == user) {
           userlast = userOrigin[i].nombre;
         }
       }
-      console.log(userlast);
+      //console.log(userlast);
       if($('.toast')[0]){
         if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
         Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
@@ -1151,7 +1151,7 @@ $(document).ready(function () {
       if (data) {
         for (let i = 0; i < data.length; i++) {
         
-          console.log(data[i].username, sessionStorage.username);
+          //console.log(data[i].username, sessionStorage.username);
           if (sessionStorage.username && data[i].username) {
            
             if (data[i].username == sessionStorage.username) {
@@ -1208,7 +1208,7 @@ $(document).ready(function () {
       });
       $(".popover1").on("shown.bs.popover", function () {
         $(".popover-body").click(function () {
-          console.log("panel");
+          //console.log("panel");
           addPanel(data, iduser);
         });
       });
@@ -1289,7 +1289,7 @@ $(document).ready(function () {
     //addContext(data);
     let compHistory = "";
     var finalmessage = "&nbsp;" || data.message;
-    console.log('CODIGO : '+idAdd);
+    //console.log('CODIGO : '+idAdd);
     let destinoFinal = "";
     if(data.destino == "Todos") {
       
@@ -1305,7 +1305,7 @@ $(document).ready(function () {
           destinoFinal = userOrigin[i].username;
         }
       }
-      console.log(idAdd);
+      //console.log(idAdd);
       html = cambiarDestino(identuser, idAdd, destinoFinal);
       
       $('.components-message').append(html);
@@ -1357,7 +1357,7 @@ $(document).ready(function () {
       
       if(historyNumber == idAdd || historyNumber == "") {
         //numberUnic = $(`.codigoNumber${idAdd}`).text();
-        console.log(numberUnic);
+        //console.log(numberUnic);
         numberUnic++;
         $(`.codigoNumber${idAdd}`).text(numberUnic);
         $(`.codigoNumber${idAdd}`).show();
@@ -1413,7 +1413,7 @@ $(document).ready(function () {
           destinoFinal = userOrigin[i].username;
         }
       }
-      console.log(idAdd);
+      //console.log(idAdd);
       html = cambiarDestino(identuser, idAdd, destinoFinal);
       
       $('.components-message').append(html);
@@ -1492,7 +1492,7 @@ $(document).ready(function () {
       $(this).scrollTop($(this).prop("scrollHeight"));
     });
     /*$(".card-message").scrollTop($(".card-message").prop("scrollHeight"));*/
-    console.log("bajando!!");
+    //console.log("bajando!!");
   }
   bajarScroll();
   function redirectUserDisconnect() {
