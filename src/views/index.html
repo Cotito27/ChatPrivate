@@ -9,6 +9,7 @@
 
 <body>
   <!--<audio id="audio" class="audio" src="/audio/samsung-sound.mp3"></audio>-->
+  
     <% if(validado==undefined || validado==null || validado=="") { %>
     <% if(redirect=="page-login") { %>
     <%- include ('partials/modal-login.html') %>
@@ -18,6 +19,7 @@
     <% } %>
    
     <div class="container p-3">
+      
       <%- include ('partials/navigation.html')%>
       <%- include ('partials/content-message.html')%>
       <%- include ('partials/content-history.html')%>

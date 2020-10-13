@@ -1,7 +1,10 @@
 <% let selector = ""; %>
 <div class="row" id="content-message"<%= selector %>>
+  
   <div class="col-md-12 mx-auto components-message">
     <div class="card panel-message" id="panelM">
+      <div class="loader-page"></div>
+      <img class="loader-imagen" src="/img/material-preloader.gif">
       <div class="container-destino">
         <i class="fas fa-chevron-left btn-prepanel"></i> <label class="title-destino" id="destinoM">Todos</label>
         <input type="hidden" class="selectorUser" value="Todos">
@@ -44,180 +47,78 @@
           <% } %>
           <% } %>
           <% } }%>
-          <!--<div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
+         <% /* %>  <!-- <div class="card-body card-message">
+          <% let changeUser = "cotito"; %>
+          <div class="container-message" id="Todos">
+            <% if(dataMessages){
+            for(let i=0; i<dataMessages.length; i++) { %>
+            <% if(dataMessages[i].username){
+            if(dataMessages[i].username.toUpperCase() == changeUser) { %>
+              <div id="mensaje<%= dataMessages[i].id %>" class="identMessage mymessage message<%= dataMessages[i].username %>">
+                <div class="contenidoimg">
+                <img class="imguser" src="<%= dataMessages[i].foto %>">
+                </div>
+                <div class="mycontenidomessage">
+                  
+                <strong class="nom-user-message"><%= dataMessages[i].nombre %></strong>
+                <p class="res-message"><%= dataMessages[i].message %></p>
+                
+                </div><div class="horamessage">
+                    <small class="hora"><%= dataMessages[i].date %></small>
+                    <input type="hidden" class="idUsername" value="<%= dataMessages[i].username %>">
+                </div>
+                <label id="<%= dataMessages[i].id %>"><i class="fas fa-check icon-ready"></i></label>
+              </div>
+            <% } else { %>
+              <% if(i>=1) { %>
+              <% if(dataMessages[i].username == dataMessages[i-1].username) { %>
+                <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage message<%= dataMessages[i].username %>">
+                  
+                  <div class="othercontenidomessage">
+                   
+                  <p class="res-message spacingSection"><%= dataMessages[i].message %></p>
+                  
+                  </div><div class="horamessage">
+                  <small class="hora"><%= dataMessages[i].date %></small>
+                  <input type="hidden" class="idUsername" value="<%= dataMessages[i].username %>">
+                  </div>
+                </div>
+              <% }  else { %>
+              <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage message<%= dataMessages[i].username %>">
+                <div class="contenidoimg">
+                 <img class="imguser" src="<%= dataMessages[i].foto %>">
+                </div>
+                <div class="othercontenidomessage">
+                 
+                <strong class="nom-user-message"><%= dataMessages[i].nombre %></strong>
+                <p class="res-message"><%= dataMessages[i].message %></p>
+                
+                </div><div class="horamessage">
+                <small class="hora"><%= dataMessages[i].date %></small>
+                <input type="hidden" class="idUsername" value="<%= dataMessages[i].username %>">
+                </div>
+              </div>
             
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-              <i class="far fa-clock icon-loader"></i>
-              <i class="fas fa-check icon-ready"></i>
-            
-          </div>-->
-          
-
-          <!--<div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
+            <% } } else { %>
+              <div id="mensaje<%= dataMessages[i].id %>" class="identMessage othermessage message<%= dataMessages[i].username %>">
+                <div class="contenidoimg">
+                 <img class="imguser" src="<%= dataMessages[i].foto %>">
+                </div>
+                <div class="othercontenidomessage">
+                 
+                <strong class="nom-user-message"><%= dataMessages[i].nombre %></strong>
+                <p class="res-message"><%= dataMessages[i].message %></p>
+                
+                </div><div class="horamessage">
+                <small class="hora"><%= dataMessages[i].date %></small>
+                <input type="hidden" class="idUsername" value="<%= dataMessages[i].username %>">
+                </div>
+              </div>
+            <% } }%>
+            <% } %>
+            <% } }%>
           </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>
-          <div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
-          </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>
-          <div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
-          </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>
-          <div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
-          </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>
-          <div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
-          </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>
-          <div class="othermessage">
-            <div class="contenidoimg">
-             <img class="imguser" src="img/user.png">
-            </div>
-            <div class="othercontenidomessage">
-             
-            <strong>Jose</strong>
-            <p>Hola!!</p>
-            
-            </div><div class="horamessage">
-            <small class="hora">12:06 PM</small>
-            </div>
-          </div>
-          <div class="mymessage">
-            <div class="contenidoimg">
-            <img class="imguser" src="img/User2.png">
-            </div>
-            <div class="mycontenidomessage">
-              
-            <strong>Cotito</strong>
-            <p>Hola como estas</p>
-            
-            </div><div class="horamessage">
-                <small class="hora">12:05 PM</small>
-            </div>
-          </div>-->
+        </div> --> <% */ %>
         </div>
       </div>
       <div class="card-footer">
