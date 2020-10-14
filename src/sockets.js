@@ -162,7 +162,7 @@ module.exports = [
         }
 
         if(userdisconnect!=undefined&&userdisconnect!=null){
-          console.log(userdisconnect);
+          //console.log(userdisconnect);
           io.emit('userDisconnect',userdisconnect);
           socket.emit("redirectUser", userdisconnect);
         }

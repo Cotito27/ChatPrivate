@@ -581,7 +581,7 @@ $(document).ready(function () {
           }
         }
         //contadoruserlast++;
-        console.log(fotoLastUser);
+        //console.log(fotoLastUser);
         if($('.toast')[0]){
         if(!$('.toast').html().includes(`<strong>${replaceuser}</strong> se ha unido al chat.`)){
           Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`); 
@@ -756,11 +756,6 @@ $(document).ready(function () {
         }
       }
       let codAux = 0;
-      for(let i = 0; i<userOrigin.length; i++) {
-        if(userOrigin[i].username == data.destino) {
-          codAux = userOrigin[i].id;
-        }
-      }  
       
         if (data.username == sessionStorage.username) {
           if($(`.${data.destino}`)[0]) {
@@ -926,7 +921,7 @@ $(document).ready(function () {
               <strong class="name-user-history" id="username">${"Todos"}</strong>
               <div class="messagenofocus">
               <p class="contenidomessagenofocus">${data.message}</p>
-                <small class="myNumberNoti codigoNumber${data.id}">0</small>
+                <small class="myNumberNoti codigoNumber${data.username}${data.destino}">0</small>
                 <i class="fas fa-chevron-right"></i>
               </div>
             </div>
@@ -988,8 +983,7 @@ $(document).ready(function () {
           
         }
         if(sessionStorage.username != data.username) {
-        
-          if($(`#panelM${data.username}${data.destino}${codAux}`).is(':hidden')) {
+          if($(`#panelM${data.username}${data.destino}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
             $('.toast-info:last').css('margin-left', '5px');
@@ -1000,29 +994,7 @@ $(document).ready(function () {
               $('.toast-info:last').css('background-position', '10px 13px'); 
             }
           }
-          if($(`#panelM${data.username}${data.destino}${codPri}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
-            $('.toast-info:last').css('margin-left', '5px');
-            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
-            if($(window).width() > 480) {
-              $('.toast-info:last').css('background-position', '10px 19px'); 
-            } else {
-              $('.toast-info:last').css('background-position', '10px 13px'); 
-            }
-          }
-          if($(`#panelM${data.destino}${data.username}${codAux}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
-            $('.toast-info:last').css('margin-left', '5px');
-            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
-            if($(window).width() > 480) {
-              $('.toast-info:last').css('background-position', '10px 19px'); 
-            } else {
-              $('.toast-info:last').css('background-position', '10px 13px'); 
-            }
-          }
-          if($(`#panelM${data.destino}${data.username}${codPri}`).is(':hidden')) {
+          if($(`#panelM${data.destino}${data.username}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
             $('.toast-info:last').css('margin-left', '5px');
@@ -1034,7 +1006,7 @@ $(document).ready(function () {
             }
           }
         }
-        console.log(`${data.username}${data.destino}${codPri}`, codAux, codPri);
+        console.log(`${data.username}${data.destino}`, codAux, codPri);
         $('.mensajeOtherNoti').each(function() {
           $(this).click(function() {
             socket.emit('focusHistory');
@@ -1047,7 +1019,7 @@ $(document).ready(function () {
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
         console.log(data.username, data.destino);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
-          $(`#userhistory${sessionStorage.username}${data.username}${codPri}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
+          $(`#userhistory${data.destino}${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
         //console.log('Llego');
         }
         /*$('.panel-message').each(function() {
@@ -1142,25 +1114,33 @@ $(document).ready(function () {
       sessionStorage.username = "";
       sessionStorage.foto = fotoDefault;
     });
-    socket.on("userDisconnect", function(user) {
+    socket.on("userDisconnect", function(data) {
       let userlast = "";
+      let fotoLastUser;
       //console.log("desconectado");
       /*for(let i=0; i<userOrigin.length; i++) {
         if(userOrigin[i].username == user) {
           userlast = userOrigin[i].nombre;
         }
       }*/
-      userlast = user.nombre;
+      userlast = data.nombre;
+      $(`.message${data.username}`).each(function() {
+       if($(this).attr('src') != "" && $(this).attr('src') != null && $(this).attr('src') != undefined) {
+        fotoLastUser = $(this).attr('src');
+       }
+      });
       //let fotoLastUser = user.foto;
       //console.log(userlast);
       if($('.toast')[0]){
         if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
         Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
         replaceuser2=userlast.toUpperCase();
+        $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
       }
       }else{
         Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
         replaceuser2=userlast.toUpperCase(); 
+        $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
       }
     });
   }
@@ -1415,9 +1395,9 @@ $(document).ready(function () {
   function cambiarDestino(identuser, idAdd, destino, data) {
     let html;
     html = `
-    <div class="card panel-message" id="panelM${sessionStorage.username}${destino}${idAdd}" style="display:none;">
+    <div class="card panel-message" id="panelM${sessionStorage.username}${destino}" style="display:none;">
     <div class="container-destino">
-    <i class="fas fa-chevron-left btn-prepanel"></i> <label class="title-destino" id="destinoM${sessionStorage.username}${destino}${idAdd}">${identuser}
+    <i class="fas fa-chevron-left btn-prepanel"></i> <label class="title-destino" id="destinoM${sessionStorage.username}${destino}">${identuser}
     </label>
     <input type="hidden" class="selectorUser" value="${destino}">
     </div>
@@ -1462,22 +1442,28 @@ $(document).ready(function () {
       return;
     }
     console.log(data.username, sessionStorage.username);
-    if($(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`)[0]) {
-      $(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`).remove();
+    if($(`#userhistory${sessionStorage.username}${destinoFinal}`)[0]) {
+      let $codNumber = $(`.codigoNumber${sessionStorage.username}${destinoFinal}`);
+      numberUnic = parseInt($codNumber.text());
+      $(`#userhistory${sessionStorage.username}${destinoFinal}`).remove();
+    } else {
+      numberUnic = 0;
     }
   
-    if (!$(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`)[0]) {
-      
+    if (!$(`#userhistory${sessionStorage.username}${destinoFinal}`)[0]) {
       //console.log(idAdd);
+
       html = cambiarDestino(identuser, idAdd, destinoFinal, data);
+      if(!$(`#panelM${sessionStorage.username}${destinoFinal}`)[0]) {
+        $('.components-message').append(html);
+      }
       
-      $('.components-message').append(html);
       
       
       backPanelMessages(true);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
-      compHistory += `<div class="messageschatnoti ${data.username} message${data.username}" id="userhistory${sessionStorage.username}${destinoFinal}${idAdd}">
+      compHistory += `<div class="messageschatnoti ${data.username} message${data.username}" id="userhistory${sessionStorage.username}${destinoFinal}">
       <div class="contenidoimg">
         <img class="imguser imghistory" src="${imageuser}">
         </div>
@@ -1485,7 +1471,7 @@ $(document).ready(function () {
               <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>
               <div class="messagenofocus">
                 <p class="contenidomessagenofocus" id="${identuser}">${finalmessage}</p>
-                <small class="myNumberNoti codigoNumber${idAdd}">0</small>
+                <small class="myNumberNoti codigoNumber${sessionStorage.username}${destinoFinal}">0</small>
                 <i class="fas fa-chevron-right"></i>
               </div>
             </div>
@@ -1507,9 +1493,26 @@ $(document).ready(function () {
     sessionStorage.selected = "message";
     nextPanelMessages(false);
     resizePage();
-    if($(`#panelM${sessionStorage.username}${destinoFinal}${idAdd}`).is(':hidden')) {
+    if($(`#panelM${sessionStorage.username}${destinoFinal}`).is(':hidden')) {
+      //console.log($(`.codigoNumber${sessionStorage.username}${destinoFinal}`).attr('numberId'), $(`.codigoNumber${sessionStorage.username}${destinoFinal}`)[0]);
       
-      $(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`).addClass('newMessage');
+      $(`#userhistory${sessionStorage.username}${destinoFinal}`).addClass('newMessage');
+      if(numberNoti<=0){
+        numberNoti+=numberUnic;
+      }
+      
+      numberNoti++;
+      $('.numberNoti').text(numberNoti);
+      $('.numberNoti').show();
+      let $codNumber = $(`.codigoNumber${sessionStorage.username}${destinoFinal}`);
+      numberUnic++;
+      $codNumber.text(numberUnic);
+      $codNumber.show();
+      //console.log($codNumber.text());
+      /*if(parseInt($(`.codigoNumber${sessionStorage.username}${destinoFinal}`).text()) > 0) {
+        numberUnic = parseInt($(`.codigoNumber${sessionStorage.username}${destinoFinal}`).text());
+      }
+      $(`#userhistory${sessionStorage.username}${destinoFinal}`).addClass('newMessage');
       if(numberNoti<=0){
         numberNoti+=numberUnic;
       }
@@ -1518,21 +1521,22 @@ $(document).ready(function () {
       $('.numberNoti').text(numberNoti);
       $('.numberNoti').show();
       
-      if(historyNumber == idAdd || historyNumber == "") {
+      if(historyNumber == `${sessionStorage.username}${destinoFinal}` || historyNumber == "") {
         //numberUnic = $(`.codigoNumber${idAdd}`).text();
         //console.log(numberUnic);
         numberUnic++;
-        $(`.codigoNumber${idAdd}`).text(numberUnic);
-        $(`.codigoNumber${idAdd}`).show();
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).text(numberUnic);
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).attr('numberId', numberUnic);
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).show();
         //$('.myNumberNoti').text(numberUnic);
       } else {
-        numberUnic = 0;
         numberUnic++;
-        $(`.codigoNumber${idAdd}`).text(numberUnic);
-        $(`.codigoNumber${idAdd}`).show();
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).text(numberUnic);
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).attr('numberId', numberUnic);
+        $(`.codigoNumber${sessionStorage.username}${destinoFinal}`).show();
         //$('.myNumberNoti').text(numberUnic);
       }
-      historyNumber = idAdd;
+      historyNumber = `${sessionStorage.username}${destinoFinal}`;*/
     } 
     
     /*$(`.messageschatnoti`).click(function() {
@@ -1570,13 +1574,13 @@ $(document).ready(function () {
       }
     }
     let finalmessage = "&nbsp;";
-    if($(`#paneM${sessionStorage.username}${destinoFinal}${idAdd}`)[0]) {
-      finalmessage = $(`#paneM${sessionStorage.username}${destinoFinal}${idAdd}`).find(`.card-message`).find('.container-message').find('.identMessage').find('.othercontenidomessage').find('.res-message').text();
+    if($(`#panelM${sessionStorage.username}${destinoFinal}`)[0]) {
+      finalmessage = $(`#panelM${sessionStorage.username}${destinoFinal}`).find(`.card-message`).find('.container-message').find('.identMessage').find('.othercontenidomessage').find('.res-message').text();
     }
     
     
     console.log(destinoFinal);
-    if (!$(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`)[0]) {
+    if (!$(`#userhistory${sessionStorage.username}${destinoFinal}`)[0]) {
       
       //console.log(idAdd);
       
@@ -1592,7 +1596,7 @@ $(document).ready(function () {
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
       $(".chatnotify")
-        .append(`<div class="messageschatnoti ${destinoFinal}" id="userhistory${sessionStorage.username}${destinoFinal}${idAdd}">
+        .append(`<div class="messageschatnoti ${destinoFinal}" id="userhistory${sessionStorage.username}${destinoFinal}">
         <div class="contenidoimg">
           <img class="imguser imghistory" src="${imageuser}">
           </div>
@@ -1600,7 +1604,7 @@ $(document).ready(function () {
                 <strong class="name-user-history" id="username${idAdd}">${identuser}</strong>
                 <div class="messagenofocus">
                   <p class="contenidomessagenofocus" id="${identuser}">${finalmessage}</p>
-                  <small class="myNumberNoti codigoNumber${idAdd}">0</small>
+                  <small class="myNumberNoti codigoNumber${sessionStorage.username}${destinoFinal}">0</small>
                   <i class="fas fa-chevron-right"></i>
                 </div>
               </div>
@@ -1614,10 +1618,11 @@ $(document).ready(function () {
     $('.content-history').hide();
     $('.content-message').show();
     $(`#content-message`).addClass('selectedItem');
+    
     $('.panel-message').hide();
-    $(`#panelM${sessionStorage.username}${destinoFinal}${idAdd}`).show();
+    $(`#panelM${sessionStorage.username}${destinoFinal}`).show();
     sessionStorage.selected = "message";
-    $(`#userhistory${sessionStorage.username}${destinoFinal}${idAdd}`).each(function() {
+    $(`#userhistory${sessionStorage.username}${destinoFinal}`).each(function() {
       if($(this).hasClass('newMessage')) {
         let $msgNewNumber = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti');
           if($msgNewNumber) {
