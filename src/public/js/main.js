@@ -756,7 +756,7 @@ $(document).ready(function () {
         }
       }
       let codAux = 0;
-      
+        if(data.destino != "Todos") {
         if (data.username == sessionStorage.username) {
           if($(`.${data.destino}`)[0]) {
             $(`.${data.destino}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
@@ -832,11 +832,10 @@ $(document).ready(function () {
                 <label id="${data.id}"><i class="far fa-clock icon-loader"></i></label>
               </div>`);
           } else {
-            if(!$(`#${data.destino}`)[0]) {
+
               //data.username = data.destino;
               addPanelOther(data, codPri);
               //console.log('xd22222');
-             }
              
             $(`#${data.destino}${data.username}`).append(`
             <div id="mensaje${data.id}" class="identMessage othermessage message${data.username}">
@@ -859,6 +858,7 @@ $(document).ready(function () {
               
           }
         }
+      }
         if(data.destino == "Todos") {
           if (data.username == sessionStorage.username) {
             if($(`.${data.destino}`)[0]) {
