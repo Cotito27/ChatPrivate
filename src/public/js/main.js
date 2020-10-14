@@ -134,7 +134,7 @@ $(document).ready(function () {
       "onclick": null,
       "showDuration": "300",
       "hideDuration": "1000",
-      "timeOut": "30000",
+      "timeOut": "4000",
       "extendedTimeOut": "1000",
       "showEasing": "swing",
       "hideEasing": "linear",
@@ -407,7 +407,10 @@ $(document).ready(function () {
         //console.log("Logeado");
         sessionStorage.username = user.toUpperCase();
         sessionStorage.nombre = nomUser.toUpperCase();
-        sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
+        if(!sessionStorage.foto) {
+          sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
+        }
+        
         socket.emit("userConnect", {
           username: sessionStorage.username,
           nombre: sessionStorage.nombre,
@@ -425,7 +428,9 @@ $(document).ready(function () {
   $('.nameUserConfig').text(sessionStorage.nombre);
   function updateUsers(data, buscar) {
     let html = "";
+    
     if (!buscar) {
+      $('.numberUsers').text(data.length);
       html += `
         <h3 class="titulousers">Usuarios Conectados (${data.length})</h3>
               <hr style="color: black; background: black; font-weight: bold;" />
@@ -451,7 +456,7 @@ $(document).ready(function () {
                 <div class="subcontenidousers${varUserColor}">
                   <div class="cotenidoimguser">
                     <img
-                      class="imguser_mini"
+                      class="imguser_mini message${data[i].username}"
                       id="imageuser${data[i].id}"
                       src="${data[i].foto}"
                     />
@@ -472,7 +477,7 @@ $(document).ready(function () {
                 <div class="subcontenidousers${varUserColor}">
                   <div class="cotenidoimguser">
                     <img
-                      class="imguser_mini"
+                      class="imguser_mini message${sessionStorage.username}"
                       id="imageuser${0}"
                       src="${sessionStorage.foto || fotoDefault}"
                     />
@@ -491,7 +496,7 @@ $(document).ready(function () {
                 <div class="subcontenidousers${varUserColor}">
                   <div class="cotenidoimguser">
                     <img
-                      class="imguser_mini"
+                      class="imguser_mini message${data[i].username}"
                       id="imageuser${data[i].id}"
                       src="${data[i].foto}"
                     />
@@ -523,7 +528,7 @@ $(document).ready(function () {
                 <div class="subcontenidousers${varUserColor}">
                   <div class="cotenidoimguser">
                     <img
-                      class="imguser_mini"
+                      class="imguser_mini message${sessionStorage.username}"
                       id="imageuser${0}"
                       src="${sessionStorage.foto || fotoDefault}"
                     />
@@ -558,10 +563,13 @@ $(document).ready(function () {
     socket.on("userConnect", function (data) {
       
       let verificar;
+      let fotoLastUser;
       if(data != [] && data) {
         verificar = data[data.length-1].username;
+        fotoLastUser = data[data.length-1].foto;
       } else {
         verificar = data[0].username;
+        fotoLastUser = data[0].foto;
       }
       let userlast = "";
       let html = updateUsers(data, false);
@@ -573,14 +581,17 @@ $(document).ready(function () {
           }
         }
         //contadoruserlast++;
+        console.log(fotoLastUser);
         if($('.toast')[0]){
         if(!$('.toast').html().includes(`<strong>${replaceuser}</strong> se ha unido al chat.`)){
           Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`); 
           replaceuser=userlast.toUpperCase();
+          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
         }
         }else{
           Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`);
           replaceuser=userlast.toUpperCase();
+          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
         }
       }
       $(".users-history").html(html);
@@ -963,42 +974,64 @@ $(document).ready(function () {
                 addSound();
               }
             }
- 
+            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
+            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            $('.toast-info:last').css('margin-left', '5px');
+            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
+            if($(window).width() > 480) {
+              $('.toast-info:last').css('background-position', '10px 19px'); 
+            } else {
+              $('.toast-info:last').css('background-position', '10px 13px'); 
+            }
+            
           }
+          
         }
         if(sessionStorage.username != data.username) {
         
           if($(`#panelM${data.username}${data.destino}${codAux}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presiona aquí para ver los mensajes</small> </div>`);
-            $('.toast-info').css('margin-left', '5px');
-            $('#toast-container>.toast-info').css({
-              'background-image': `url("${data.foto || fotoToastDefault}") !important;`
-            });
+            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            $('.toast-info:last').css('margin-left', '5px');
+            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
+            if($(window).width() > 480) {
+              $('.toast-info:last').css('background-position', '10px 19px'); 
+            } else {
+              $('.toast-info:last').css('background-position', '10px 13px'); 
+            }
           }
           if($(`#panelM${data.username}${data.destino}${codPri}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presiona aquí para ver los mensajes</small> </div>`);
-            $('.toast-info').css('margin-left', '5px');
-            $('#toast-container>.toast-info').css({
-              'background-image': `url("${data.foto || fotoToastDefault}") !important;`
-            });
+            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            $('.toast-info:last').css('margin-left', '5px');
+            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
+            if($(window).width() > 480) {
+              $('.toast-info:last').css('background-position', '10px 19px'); 
+            } else {
+              $('.toast-info:last').css('background-position', '10px 13px'); 
+            }
           }
           if($(`#panelM${data.destino}${data.username}${codAux}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presiona aquí para ver los mensajes</small> </div>`);
-            $('.toast-info').css('margin-left', '5px');
-            $('#toast-container>.toast-info').css({
-              'background-image': `url("${data.foto || fotoToastDefault}") !important;`
-            });
+            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            $('.toast-info:last').css('margin-left', '5px');
+            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
+            if($(window).width() > 480) {
+              $('.toast-info:last').css('background-position', '10px 19px'); 
+            } else {
+              $('.toast-info:last').css('background-position', '10px 13px'); 
+            }
           }
           if($(`#panelM${data.destino}${data.username}${codPri}`).is(':hidden')) {
             Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
-            <small class="lighter">Presiona aquí para ver los mensajes</small> </div>`);
-            $('.toast-info').css('margin-left', '5px');
-            $('#toast-container>.toast-info').css({
-              'background-image': `url("${data.foto || fotoToastDefault}") !important;`
-            });
+            <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            $('.toast-info:last').css('margin-left', '5px');
+            $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
+            if($(window).width() > 480) {
+              $('.toast-info:last').css('background-position', '10px 19px'); 
+            } else {
+              $('.toast-info:last').css('background-position', '10px 13px'); 
+            }
           }
         }
         console.log(`${data.username}${data.destino}${codPri}`, codAux, codPri);
@@ -1112,11 +1145,13 @@ $(document).ready(function () {
     socket.on("userDisconnect", function(user) {
       let userlast = "";
       //console.log("desconectado");
-      for(let i=0; i<userOrigin.length; i++) {
+      /*for(let i=0; i<userOrigin.length; i++) {
         if(userOrigin[i].username == user) {
           userlast = userOrigin[i].nombre;
         }
-      }
+      }*/
+      userlast = user.nombre;
+      //let fotoLastUser = user.foto;
       //console.log(userlast);
       if($('.toast')[0]){
         if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
@@ -1125,7 +1160,7 @@ $(document).ready(function () {
       }
       }else{
         Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
-        replaceuser2=userlast.toUpperCase();  
+        replaceuser2=userlast.toUpperCase(); 
       }
     });
   }
@@ -1166,7 +1201,11 @@ $(document).ready(function () {
     socket.on('cambiarFoto', function(data) {
       $(`.message${data.username}`).each(function() {
         $(this).find('.contenidoimg').find('.imguser').attr('src',data.foto);
+       if($(this).attr('src') != "" && $(this).attr('src') != null && $(this).attr('src') != undefined) {
+        $(this).attr('src', data.foto);
+       }
       });
+      
     });
   }
   detectarCambioFoto();

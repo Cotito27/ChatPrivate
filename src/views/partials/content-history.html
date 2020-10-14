@@ -11,12 +11,17 @@
             <div class="messageschatnoti Todos message<%= userHistory.username %>" id="userhistory-1">
 
               <div class="contenidoimg">
-                <img class="imguser imghistory" src="<%= userHistory.foto %>" />
+                <img class="imguser imghistory" src="<%= userHistory.foto || '/img/avatar-login3.png' %>" alt="<%= userHistory.nombre %>"/>
               </div>
               <div class="contenidochatmessages">
                 <strong class="name-user-history" id="username"><%= "Todos" %></strong>
                 <div class="messagenofocus">
-                <p class="contenidomessagenofocus"><%= userHistory.message %></p>
+                
+                <% if(userHistory.message != "" && userHistory.message != null && userHistory.message !=undefined) { %>
+                  <p class="contenidomessagenofocus"><%= userHistory.message %></p>
+                <% } else { %>
+                  <p class="contenidomessagenofocus">&nbsp;</p>
+                <% } %>
                   <small class="myNumberNoti codigoNumber">0</small>
                   <i class="fas fa-chevron-right"></i>
                 </div>

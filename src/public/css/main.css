@@ -46,7 +46,18 @@
   top: 61%;
   display: none;
 }
+.numberUsers {
+  font-size: 12px;
+  background: black;
 
+  border-radius: 35px;
+  font-weight: bolder;
+  width: 25px;
+  height: 19px;
+  position: absolute;
+  left: 50%;
+  top: 61%;
+}
 #content-users,
 #content-history,
 #content-config {
@@ -165,9 +176,10 @@ body {
   margin-right: 9px;
   margin-top: 3px;
   background: rgb(245, 245, 245);
+  border-radius: 150px;
+  border: 1px solid white;
 }
 img {
-  border-radius: 150px;
   /*background-repeat: no-repeat;
     background-position: 50%;
     border-radius: 50%;

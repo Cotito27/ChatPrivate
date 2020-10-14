@@ -150,10 +150,10 @@ module.exports = [
         let userdisconnect;
         let prueba;
         if (socket.username) {
-          userdisconnect = socket.username;
           //socket.emit("disconnectUser", userdisconnect);
           for(let i=0; i<usersOnline.length; i++) {
-            if(usersOnline[i].username == userdisconnect) {
+            if(usersOnline[i].username == socket.username) {
+              userdisconnect = usersOnline[i];
               usersOnline.splice(i, 1)
             }
           }
