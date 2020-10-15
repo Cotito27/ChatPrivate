@@ -281,7 +281,7 @@ $(document).ready(function () {
         } else {
           $('.panel-message').hide();
           $(`#destinoM${idHistory}`).text(userVar);
-          let $panelScroll = $(`#panelM${idHistory}`).find('.card-message').find('.container-message');
+          let $panelScroll = $(`#panelM${idHistory}`).find('.card-message');
           $panelScroll.scrollTop($panelScroll.prop('scrollHeight'));
           $(`#panelM${idHistory}`).show();
         }
@@ -317,6 +317,7 @@ $(document).ready(function () {
         $(this).removeClass('newMessage');
       }
       bajarScroll();
+      focusMessage();
       destinoOrigin = $(`#destinoM${idHistory}`).html();
       /*for(let i=0; i<data.length; i++) {
         if(data[i].nombre == destinoOrigin) {
@@ -606,6 +607,8 @@ $(document).ready(function () {
           //numberNoti = 0;
           //$('.numberNoti').hide();
           addPanel(data, iduser);
+          bajarScroll();
+          focusMessage();
         });
       });
     });
@@ -1348,6 +1351,8 @@ $(document).ready(function () {
         $(".popover-body").click(function () {
           //console.log("panel");
           addPanel(data, iduser);
+          bajarScroll();
+          focusMessage();
         });
       });
     });
@@ -1656,8 +1661,15 @@ $(document).ready(function () {
     });*/
 
     addEventsMessage();
+    
     //bajarScroll();
     $(".btnmessage").click();
+  }
+
+  function focusMessage() {
+    $(".textMessage").each(function() {   
+      $(this).focus();
+    });
   }
 
   function bajarScroll() {
