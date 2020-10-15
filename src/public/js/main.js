@@ -406,7 +406,7 @@ $(document).ready(function () {
       //console.log(respuesta);
       if (respuesta) {
         //console.log("Logeado");
-        sessionStorage.username = user.toUpperCase();
+        sessionStorage.username = user.toUpperCase().replace('@','_').replace('.','_');
         sessionStorage.nombre = nomUser.toUpperCase();
         if(!sessionStorage.foto) {
           sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
@@ -1182,12 +1182,15 @@ $(document).ready(function () {
   });
   function detectarCambioFoto() {
     socket.on('cambiarFoto', function(data) {
-      $(`.message${data.username}`).each(function() {
-        $(this).find('.contenidoimg').find('.imguser').attr('src',data.foto);
-       if($(this).attr('src') != "" && $(this).attr('src') != null && $(this).attr('src') != undefined) {
-        $(this).attr('src', data.foto);
-       }
-      });
+      if($(`.message${data.username}`)[0]) {
+        $(`.message${data.username}`).each(function() {
+          $(this).find('.contenidoimg').find('.imguser').attr('src',data.foto);
+         if($(this).attr('src') != "" && $(this).attr('src') != null && $(this).attr('src') != undefined) {
+          $(this).attr('src', data.foto);
+         }
+        });
+      }
+      
       
     });
   }

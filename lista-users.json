@@ -23,6 +23,12 @@
       "user": "marcos",
       "password": "123",
       "nombres": "marcos"
+    },
+    {
+      "id": 5,
+      "user": "aea@aea.com",
+      "password": "123",
+      "nombres": "aea"
     }
   ]
 }

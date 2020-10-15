@@ -25,8 +25,10 @@ codigoUsers = codigoglobal.codigo.id;
 var objUsers = {
   listusers: [],
 };
-
-contobj = functions.listarUsersExist(userexist, objUsers);
+for (var i = 0; i < userexist.listusers.length; i++) {
+  objUsers.listusers.push(userexist.listusers[i]);
+}
+contobj = objUsers.listusers.length;
 //await client.empty();
 /*let key = await client.get("producto");
     for(var i=0; i<key.length; i++) {
@@ -55,7 +57,7 @@ module.exports = [
     io.on("connection", async (socket) => {
       
       console.log("conectado");
-      socket.emit("obtenerLista", userexist.listusers);
+      socket.emit("obtenerLista", objUsers.listusers);
       socket.on("userConnect", function (data) {
         
         //socket.join(data.username);
@@ -90,7 +92,13 @@ module.exports = [
         codigoglobal.codigo.id = codigoUsers;
         contobj++;
         console.log("registrando...");
-        await functions.guardarUser(data, contobj, objUsers);
+        objUsers.listusers.push({
+          id: contobj,
+          user: data.username,
+          password: data.password,
+          nombres: data.nombre,
+        });
+        await functions.guardarUser(objUsers);
         socket.emit("success");
         console.log("Registrado");
       });

@@ -61,13 +61,7 @@ module.exports = {
       });
   },
 
-  guardarUser: async function (data, contobj, objUsers) {
-    objUsers.listusers.push({
-      id: contobj,
-      user: data.username,
-      password: data.password,
-      nombres: data.nombre,
-    });
+  guardarUser: async function (objUsers) {
     await jsonfile
       .writeFile("lista-users.json", objUsers, { spaces: 2 })
       .then(() => console.log("Usuario Exitoso"))
