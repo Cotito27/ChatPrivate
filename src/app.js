@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const fileupload = require("express-fileupload");
+const multer = require('multer');
 
 const path = require('path');
 
@@ -13,6 +15,11 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 /*app.use(express.json());
 app.use(express.urlencoded({ extended: false }));*/
+
+// Middlewares
+app.use(multer({
+  dest: path.join(__dirname, "public/upload")
+}).single('imageUser'));
 
 // routes
 app.use(require('./routes/index').router);   

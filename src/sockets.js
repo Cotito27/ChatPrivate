@@ -3,7 +3,7 @@ let codigoglobal = require("../codigo.json");
 let userexist = require("../lista-users.json");
 let varEnv = require("./variables");
 let db = require("./database");
-let functions = require("./functions");
+const functions = require("./functions");
 
 let codigoUsers;
 
@@ -17,17 +17,11 @@ let codigoIdUser = 0;
 
 let indiceglobal = 0;
 let oldMessages = [];
-
+let objUsers = varEnv.objUsers;
 //Database Connect
 
 codigoUsers = codigoglobal.codigo.id;
 
-var objUsers = {
-  listusers: [],
-};
-for (var i = 0; i < userexist.listusers.length; i++) {
-  objUsers.listusers.push(userexist.listusers[i]);
-}
 contobj = objUsers.listusers.length;
 //await client.empty();
 /*let key = await client.get("producto");
@@ -55,7 +49,7 @@ actualizarMessages();
 module.exports = [
   (io) => {
     io.on("connection", async (socket) => {
-      
+      //console.log(objUsers.listusers);
       console.log("conectado");
       socket.emit("obtenerLista", objUsers.listusers);
       socket.on("userConnect", function (data) {
@@ -73,7 +67,6 @@ module.exports = [
           socket.username = data.username;
           data.id = codigoIdUser;
           codigoIdUser++;
-          usersOnline.foto = "/img/avatar-login3.png";
           usersOnline.push(data);
         }
 
@@ -97,6 +90,7 @@ module.exports = [
           user: data.username,
           password: data.password,
           nombres: data.nombre,
+          nameFoto: data.nameFoto
         });
         await functions.guardarUser(objUsers);
         socket.emit("success");
@@ -114,15 +108,19 @@ module.exports = [
         console.log(data.destino,"destino");
         
           messages.push(data);
-          if (messages.length >= 60) {
-            messages = messages.slice(messages.length - 60);
+          if(messages.length >= 60) {
+            messages.splice(0,1);
           }
+          console.log(messages.length);
+          /*if (messages.length >= 60) {
+            messages = messages.slice(messages.length - 60);
+          }*/
+          //console.log(messages[messages.length-1]);
           io.emit("previousMessage", data);
           if(data.destino == "Todos") {
-            messages[messages.length-1].foto = "/img/avatar-login3.png";
             await functions
             .guardarMessages(messages)
-            .then()
+            .then(()=> console.log('Recibido el mensaje'))
             .catch((err) => {
               console.log(err);
             });   
@@ -144,7 +142,9 @@ module.exports = [
           if (value) {
             messages = value;
             oldMessages = value;
+            
           }
+          
           if (oldMessages != []) {
             socket.emit("updateMessages", oldMessages);
           }

@@ -21,6 +21,7 @@
 $(document).ready(function () {
   //alert(location.origin + " " +location.href);
   const socket = io();
+  
   function resizePage() {
     if ($(window).width() <= 550) {
       $(".card-message").css("height", $(window).height() - 202 + "px");
@@ -43,6 +44,7 @@ $(document).ready(function () {
     }
   }
   const fotoDefault = "/img/avatar-login3.png";
+  sessionStorage.foto = fotoDefault;
   const fotoToastDefault = '/img/avatar-login4.png';
   let destinoOrigin = $(".title-destino").html();
   let redirec = ["config", "history", "users", "message", "history"];
@@ -113,9 +115,7 @@ $(document).ready(function () {
   }else{
     $('#defaultCheck1').prop('checked', true);
   }
-  if(sessionStorage.foto) {
-    $("#imgUserConfig,.imgRegister").attr("src", sessionStorage.foto);
-  }
+  
   /*if(sessionStorage.username && sessionStorage.nombre) {
     socket.emit("userConnect", {
       username: sessionStorage.username,
@@ -358,11 +358,59 @@ $(document).ready(function () {
     }
   });
   let listaUsers = [];
-  socket.on("obtenerLista", function(data) {
+  async function isUrlFound(url) {
+    try {
+      const response = await fetch(url, {
+        method: 'HEAD',
+        cache: 'no-cache'
+      });
+
+      return response.status === 200;
+
+    } catch(error) {
+      // console.log(error);
+      return false;
+    }
+}
+  socket.on("obtenerLista", async function(data) {
     listaUsers = data;
+    let fotoUserName;
+    for(let i = 0; i < data.length; i++) {
+      
+      if(data[i].user.toUpperCase() == sessionStorage.username) {
+          let valid = await isUrlFound(`../upload/${data[i].nameFoto}`);
+          if(valid) {
+              fotoUserName = data[i].nameFoto;
+            } 
+        }
+      
+    }
+    console.log(fotoUserName);
+    if(fotoUserName != fotoDefault && fotoUserName != undefined) {
+      sessionStorage.foto = `/upload/${fotoUserName}`;
+    } else {
+      sessionStorage.foto = fotoDefault;
+    }
+    if (sessionStorage.username) {
+      socket.emit("userConnect", {
+        username: sessionStorage.username,
+        nombre: sessionStorage.nombre,
+        foto: sessionStorage.foto || fotoDefault,
+      });
+    }
+    socket.emit('cambiarFoto', {
+      username: sessionStorage.username,
+      foto: sessionStorage.foto
+    });
+    if(sessionStorage.foto != undefined) {
+      $("#imgUserConfig,.imgRegister").attr("src", sessionStorage.foto || fotoDefault);
+    } else {
+      $("#imgUserConfig,.imgRegister").attr("src", fotoDefault);
+    }
+    console.log(sessionStorage.foto);
     //console.log(listaUsers);
   });
-
+  
   function registrarUsuario(nom, user, pass) {
     
     //console.log(nom, user, pass);
@@ -377,6 +425,7 @@ $(document).ready(function () {
             nombre: nom,
             username: user,
             password: pass,
+            nameFoto: fotoDefault
           });
         } else {
           (async() => {
@@ -394,6 +443,7 @@ $(document).ready(function () {
     socket.on("obtenerUsers", function (data) {
       var respuesta = false;
       var nomUser;
+      var fotoUserName;
       //console.log(data);
       for (let i = 0; i < data.length; i++) {
         //console.log(user, data[i].user);
@@ -401,11 +451,18 @@ $(document).ready(function () {
         } else {
           nomUser = data[i].nombres;
           respuesta = true;
+          fotoUserName = data[i].nameFoto;
         }
       }
       //console.log(respuesta);
       if (respuesta) {
         //console.log("Logeado");
+        if(fotoUserName != fotoDefault) {
+          sessionStorage.foto = `/upload/${fotoUserName}`;
+        } else {
+          sessionStorage.foto = fotoUserName;
+        }
+        
         sessionStorage.username = user.toUpperCase().replace('@','_').replace('.','_');
         sessionStorage.nombre = nomUser.toUpperCase();
         if(!sessionStorage.foto) {
@@ -427,6 +484,7 @@ $(document).ready(function () {
     });
   }
   $('.nameUserConfig').text(sessionStorage.nombre);
+  $('.inputUser').val(sessionStorage.username);
   function updateUsers(data, buscar) {
     let html = "";
     
@@ -613,13 +671,7 @@ $(document).ready(function () {
       });
     });
   }
-  if (sessionStorage.username) {
-    socket.emit("userConnect", {
-      username: sessionStorage.username,
-      nombre: sessionStorage.nombre,
-      foto: sessionStorage.foto || fotoDefault,
-    });
-  }
+  
   actualizarUsers();
   function enviarMensaje(user, message, fotoUser) {
     let destino_user = "Todos";
@@ -1165,10 +1217,10 @@ $(document).ready(function () {
       }
     };
   }
-  document.getElementById("imagefile").onchange = function (e) {
+  /*document.getElementById("imagefile").onchange = function (e) {
     let imgFoto = document.querySelector(".imgRegister");
     changeFoto(e, imgFoto);
-  };
+  };*/
   document.getElementById("file-foto").onchange = function (e) {
     let imgFoto = document.querySelector("#imgUserConfig");
     changeFoto(e, imgFoto);
@@ -1176,10 +1228,7 @@ $(document).ready(function () {
   $("#eliminarFoto").click(function () {
     $("#imgUserConfig").attr("src", fotoDefault);
   });
-  socket.emit('cambiarFoto', {
-    username: sessionStorage.username,
-    foto: sessionStorage.foto
-  });
+  
   function detectarCambioFoto() {
     socket.on('cambiarFoto', function(data) {
       if($(`.message${data.username}`)[0]) {
@@ -1195,23 +1244,17 @@ $(document).ready(function () {
     });
   }
   detectarCambioFoto();
-  $("#guardarCambios").click(async function () {
+  /*$("#guardarCambios").click(async function () {
     sessionStorage.foto = await $("#imgUserConfig").attr("src");
     socket.emit('cambiarFoto', {
       username: sessionStorage.username,
       foto: sessionStorage.foto
     });
-    /*$(`.message${sessionStorage.username}`).each(function() {
-      $(this).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
-    });*/
-
     verificarSonido();
     (async() => {
-      //swal("Success!", "Se han guardado los cambios ", "success");
       swal("Success!", "Se han guardado exitosamente los cambios!", "success");
     })();
-    //console.log(sessionStorage.foto);
-  });
+  });*/
   function verificarSonido() {
     if($('#defaultCheck1').prop('checked')){
       sessionStorage.sonido="sound";

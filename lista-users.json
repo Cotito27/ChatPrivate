@@ -4,31 +4,43 @@
       "id": 1,
       "user": "jesus",
       "password": "123",
-      "nombres": "jesus"
+      "nombres": "jesus",
+      "nameFoto": "/img/avatar-login3.png"
     },
     {
       "id": 2,
       "user": "admin",
       "password": "123",
-      "nombres": "jesus"
+      "nombres": "jesus",
+      "nameFoto": "0ksy4id.png"
     },
     {
       "id": 3,
       "user": "luis",
       "password": "123",
-      "nombres": "luis"
+      "nombres": "luis",
+      "nameFoto": "0jj5uj1.png"
     },
     {
       "id": 4,
       "user": "marcos",
       "password": "123",
-      "nombres": "marcos"
+      "nombres": "marcos",
+      "nameFoto": "/img/avatar-login3.png"
     },
     {
       "id": 5,
       "user": "aea@aea.com",
       "password": "123",
-      "nombres": "aea"
+      "nombres": "aea",
+      "nameFoto": "/img/avatar-login3.png"
+    },
+    {
+      "id": 6,
+      "user": "lol@lol.com",
+      "password": "123",
+      "nombres": "lol",
+      "nameFoto": "/img/avatar-login3.png"
     }
   ]
 }
