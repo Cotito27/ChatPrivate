@@ -407,7 +407,8 @@ $(document).ready(function () {
     } else {
       $("#imgUserConfig,.imgRegister").attr("src", fotoDefault);
     }
-    console.log(sessionStorage.foto);
+    //console.log(sessionStorage.foto);
+    //console.log('Lista Obtenida');
     //console.log(listaUsers);
   });
   
@@ -1165,10 +1166,10 @@ $(document).ready(function () {
   }
   obtenerMensajes();
   function userDisconnect() {
-    socket.on("disconnect", function () {
+    /*socket.on("disconnect", function () {
       sessionStorage.username = "";
       sessionStorage.foto = fotoDefault;
-    });
+    });*/
     socket.on("userDisconnect", function(data) {
       let userlast = "";
       let fotoLastUser;
@@ -1255,6 +1256,45 @@ $(document).ready(function () {
       swal("Success!", "Se han guardado exitosamente los cambios!", "success");
     })();
   });*/
+  $('#uploader').on('submit', function(event) {
+    event.preventDefault();
+    let timer = 0;
+    $('.loader-page').show();
+    var form = $('#uploader')[0];
+    var formData = new FormData(form);
+    console.log(`${location.origin}/images`);
+    setTimeout(function() {
+      if(timer <= 0) {
+        alert('No se ha podido subir la imagen');
+        $('.loader-page').hide();
+      }
+    }, 5000);
+    $.ajax({
+      url: `${location.origin}/images`,
+      data: formData,
+      type: 'POST',
+      contentType: false,
+      processData: false
+    }).then(function(response) {
+      if(response != fotoDefault) {
+        sessionStorage.foto = `/upload/${response}`;
+      } else {
+        sessionStorage.foto = response;
+      }
+      
+      socket.emit('cambiarFoto', {
+        username: sessionStorage.username,
+        foto: sessionStorage.foto
+      });
+      verificarSonido();
+      (async() => {
+        swal("Success!", "Se han guardado exitosamente los cambios!", "success");
+        $('.loader-page').hide();
+        timer++;
+      })();
+    }).catch((err) => console.log(err));
+    
+  });
   function verificarSonido() {
     if($('#defaultCheck1').prop('checked')){
       sessionStorage.sonido="sound";

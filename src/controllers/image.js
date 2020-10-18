@@ -17,7 +17,21 @@ ctrl.index = async (req, res) => {
   });
 };
 
-ctrl.create = (req, res) => {
+ctrl.create = async (req, res) => {
+  console.log('Cambiando Imagen');
+  if(!req.file || req.file == undefined || req.file == null) {
+    const fotoDefault = '/img/avatar-login3.png';
+    const userNameNull = req.body.username;
+    for(let i=0; i<objUsers.listusers.length; i++) {
+      if(objUsers.listusers[i].user.toUpperCase() == userNameNull) {
+        objUsers.listusers[i].nameFoto = fotoDefault;
+      }
+      //console.log(objUsers.listusers[i].user, userName)
+    }
+    await functions.guardarUser(objUsers);
+    res.send(fotoDefault);
+    return;
+  }
   const saveImage = async () => {
     const imgUrl = randomNumber();
     let images = [];
@@ -68,7 +82,8 @@ ctrl.create = (req, res) => {
         });*/
         newImg = imgUrl + ext;
         console.log(newImg, 'image');
-        res.redirect('/');
+        //res.redirect('/');
+        res.send(`${imgUrl}${ext}`);
       } else {
         await fs.unlink(imageTempPath);
         res.status(500).json({ error: 'Only Images are allowed' });

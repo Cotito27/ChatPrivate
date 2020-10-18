@@ -32,15 +32,22 @@ ctrl.index = async (req, res) => {
   }
   for(let i=0; i<oldMessages.length; i++) {
     for(let j=0; j<objUsers.listusers.length; j++) {
-      if(oldMessages[i].username.toUpperCase() == objUsers.listusers[j].user.toUpperCase()) {
-        oldMessages[i].foto = objUsers.listusers[j].nameFoto;
+        if(oldMessages[i].username.toUpperCase() == objUsers.listusers[j].user.toUpperCase()) {
+         
+          if(oldMessages[i].foto != '/img/avatar-login3.png' && !oldMessages[i].foto.includes('upload')) {
+            oldMessages[i].foto = `/upload/${objUsers.listusers[j].nameFoto}`;
+          }
+          
+          oldMessages[i].foto = `/upload/${objUsers.listusers[j].nameFoto}`;
+          //console.log(path.resolve(`src/public/${oldMessages[i].foto}`));
+          //console.log(oldMessages[i].foto, oldMessages[i].username);
+          if(!fileExists(path.resolve(`src/public/${oldMessages[i].foto}`)) || !oldMessages[i].foto.includes('upload')) {
+            oldMessages[i].foto = '/img/avatar-login3.png';
+          }
       }
-    }
-    if(!fileExists(path.resolve(`./src/public/upload/${oldMessages[i].foto}`))) {
-      oldMessages[i].foto = '/img/avatar-login3.png';
       
     }
-    console.log(oldMessages[i].foto);
+    
   }
   
   console.log(newImg, 'image');

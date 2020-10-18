@@ -11,7 +11,8 @@
         </center>
       </div>
       <div class="card-body card-config">
-        <form action="/images" method="POST" enctype="multipart/form-data">
+        <!-- action="/images" -->
+        <form id="uploader" method="POST" enctype="multipart/form-data">
           <div class="container-config">
             <center>
               <div class="subtitle-noti">
@@ -90,16 +91,15 @@
           <br>        
           </center>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="file-foto" name="imageUser" required>
+            <input type="file" class="custom-file-input" id="file-foto" name="imageUser">
             <label class="custom-file-label" name="file" for="file-foto">Elige la foto</label>
           </div>
         </div>
-          <button id="eliminarFoto" class="btn btn-danger btn-block">
-            Eliminar Foto
-          </button>
+          <input type="button" id="eliminarFoto" class="btn btn-danger btn-block" value="Eliminar Foto">
+            
           <br>
           <br>
-          <button id="guardarCambios" class="btn btn-dark btn-block">
+          <button type="submit" id="guardarCambios" class="btn btn-dark btn-block">
             Guardar Cambios
           </button>
       </form>
