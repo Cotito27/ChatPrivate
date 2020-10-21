@@ -464,8 +464,8 @@ $(document).ready(function () {
           sessionStorage.foto = fotoUserName;
         }
         
-        sessionStorage.username = user.toUpperCase().replace('@','_').replace('.','_');
         sessionStorage.nombre = nomUser.toUpperCase();
+        sessionStorage.username = user.toUpperCase().replace(/[_\W]+/g,'_');
         if(!sessionStorage.foto) {
           sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
         }
