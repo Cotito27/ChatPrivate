@@ -1081,8 +1081,8 @@ $(document).ready(function () {
         /*$('.panel-message').each(function() {
           $(this).find('.contenidochatmessages').find()
         });*/
-        $('.res-message').each(function() {
-          $(this).text($(this).html());
+        $('.res-message:last').each(function() {
+          $(this).text(data.message);
         });
         //console.log("userhistory"+data.id);
       //console.log(data.destino, sessionStorage.username);
