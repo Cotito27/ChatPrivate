@@ -1263,12 +1263,11 @@ $(document).ready(function () {
     var form = $('#uploader')[0];
     var formData = new FormData(form);
     console.log(`${location.origin}/images`);
-    setTimeout(function() {
+    /*setTimeout(function() {
       if(timer <= 0) {
-        alert('No se ha podido subir la imagen');
-        $('.loader-page').hide();
+        
       }
-    }, 5000);
+    }, 5000);*/
     $.ajax({
       url: `${location.origin}/images`,
       data: formData,
@@ -1292,7 +1291,12 @@ $(document).ready(function () {
         $('.loader-page').hide();
         timer++;
       })();
-    }).catch((err) => console.log(err));
+      $('#file-foto').val(null);
+    }).catch((err) => {
+      console.log(err);
+      swal("Error!", "No se ha podido subir la imagen, intente denuevo :(", "error");
+      $('.loader-page').hide();
+    });
     
   });
   function verificarSonido() {

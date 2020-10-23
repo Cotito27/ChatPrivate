@@ -21,14 +21,17 @@ const ctrl = {};
 
 ctrl.index = async (req, res) => {
   oldMessages = await varEnv.oldMessages
-    .then(console.log("Mensajes obtenidos"))
+    .then()
     .catch((err) => {
       console.log(err);
-    });
+    }) || [];
   if (messages.length != undefined) {
     if (messages.length >= 1) {
       oldMessages = messages;
     }
+  }
+  if(oldMessages.length == undefined) {
+    console.log('Error de conexion');
   }
   for(let i=0; i<oldMessages.length; i++) {
     for(let j=0; j<objUsers.listusers.length; j++) {

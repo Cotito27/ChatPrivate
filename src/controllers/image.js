@@ -20,13 +20,18 @@ ctrl.index = async (req, res) => {
 ctrl.create = async (req, res) => {
   console.log('Cambiando Imagen');
   if(!req.file || req.file == undefined || req.file == null) {
+    let imgPrevious;
     const fotoDefault = '/img/avatar-login3.png';
     const userNameNull = req.body.username;
     for(let i=0; i<objUsers.listusers.length; i++) {
       if(objUsers.listusers[i].user.toUpperCase() == userNameNull) {
+        imgPrevious = objUsers.listusers[i].nameFoto;
         objUsers.listusers[i].nameFoto = fotoDefault;
       }
       //console.log(objUsers.listusers[i].user, userName)
+    }
+    if(imgPrevious) {
+      await fs.unlink(path.resolve(`src/public/upload/${imgPrevious}`)).then().catch((err) => console.log(err));
     }
     await functions.guardarUser(objUsers);
     res.send(fotoDefault);
