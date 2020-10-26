@@ -8,8 +8,7 @@
         <img class="loader-imagen" src="/img/material-preloader.gif">
         <div class="container-history">
           <div class="chatnotify">
-            <%= userHistory %>
-            <% if(!userHistory && userHistory != undefined) { %>
+            <% if(userHistory && userHistory != undefined) { %>
             <div class="messageschatnoti Todos message<%= userHistory.username %>" id="userhistory-1">
 
               <div class="contenidoimg">

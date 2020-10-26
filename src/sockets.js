@@ -144,9 +144,13 @@ module.exports = [
             oldMessages = value;
             
           }
-          
-          if (oldMessages != []) {
+          /*console.log(oldMessages);
+          console.log(messages);
+          console.log(value);*/
+          if (value != [] && value != undefined) {
             socket.emit("updateMessages", oldMessages);
+          } else {
+            socket.emit("updateMessages", messages);
           }
         });
         //console.log(messages);

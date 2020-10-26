@@ -1378,7 +1378,7 @@ $(document).ready(function () {
       //console.log(data);
       if (data) {
         for (let i = 0; i < data.length; i++) {
-        
+          //console.log(data[i].username);
           //console.log(data[i].username, sessionStorage.username);
           if (sessionStorage.username && data[i].username) {
            
@@ -1390,12 +1390,12 @@ $(document).ready(function () {
                 .addClass("mymessage");
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
               }
-              if($(`.message${data.username}`)[0]) {
-                $(`.message${data.username}`).each(function() {
+              /*if($(`.message${data[i].username}`)[0]) {
+                $(`.message${data[i].username}`).each(function() {
                   $(this).removeClass("othermessage")
                   .addClass("mymessage");
                 });         
-              }
+              }*/
               bajarScroll();
               //console.log('xd');
             } else {
@@ -1405,12 +1405,12 @@ $(document).ready(function () {
                 .addClass("othermessage");
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
               }
-              if($(`.message${data.username}`)[0]) {
-                $(`.message${data.username}`).each(function() {
+              /*if($(`.message${data[i].username}`)[0]) {
+                $(`.message${data[i].username}`).each(function() {
                   $(this).removeClass("othermessage")
                   .addClass("mymessage");
                 });         
-              }
+              }*/
             }
           }
         }
