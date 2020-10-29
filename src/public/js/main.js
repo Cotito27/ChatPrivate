@@ -1081,9 +1081,7 @@ $(document).ready(function () {
         /*$('.panel-message').each(function() {
           $(this).find('.contenidochatmessages').find()
         });*/
-        $('.res-message:last').each(function() {
-          $(this).text(data.message);
-        });
+        
         //console.log("userhistory"+data.id);
       //console.log(data.destino, sessionStorage.username);
       
@@ -1098,6 +1096,9 @@ $(document).ready(function () {
       socket.emit('cambiarFoto', {
         username: data.username,
         foto: data.foto
+      });
+      $('.res-message').each(function() {
+        $(this).text($(this).html().text());
       });
     });
     socket.on("sendMessage", function (data) {
