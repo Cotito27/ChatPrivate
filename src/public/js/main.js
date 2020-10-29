@@ -829,7 +829,7 @@ $(document).ready(function () {
             <div class="mycontenidomessage">
               
             <strong class="nom-user-message">${data.nombre}</strong>
-            <p class="res-message">${data.message}</p>
+            <p class="res-message"></p>
             
             </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -849,7 +849,7 @@ $(document).ready(function () {
               <div class="othercontenidomessage">
                
               <strong class="nom-user-message">${data.nombre}</strong>
-              <p class="res-message">${data.message}</p>
+              <p class="res-message"></p>
               
               </div><div class="horamessage">
               <small class="hora">${data.date}</small>
@@ -879,7 +879,7 @@ $(document).ready(function () {
                 <div class="mycontenidomessage">
                   
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message">${data.message}</p>
+                <p class="res-message"></p>
                 
                 </div><div class="horamessage">
                     <small class="hora">${data.date}</small>
@@ -901,7 +901,7 @@ $(document).ready(function () {
                 <div class="othercontenidomessage">
                  
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message">${data.message}</p>
+                <p class="res-message"></p>
                 
                 </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -932,7 +932,7 @@ $(document).ready(function () {
               <div class="mycontenidomessage">
                 
               <strong class="nom-user-message">${data.nombre}</strong>
-              <p class="res-message">${data.message}</p>
+              <p class="res-message"></p>
               
               </div><div class="horamessage">
                   <small class="hora">${data.date}</small>
@@ -952,7 +952,7 @@ $(document).ready(function () {
                 <div class="othercontenidomessage">
                  
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message">${data.message}</p>
+                <p class="res-message"></p>
                 
                 </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -1088,6 +1088,9 @@ $(document).ready(function () {
       //console.log(data.destino, data.username);
       
       actualizarHistory(data);
+      $('.res-message:last').each(function() {
+        $(this).text(data.message);
+      });
       if (confirmador) {
         chatarea.scrollTop = chatarea.scrollHeight;
       } else {
@@ -1097,9 +1100,7 @@ $(document).ready(function () {
         username: data.username,
         foto: data.foto
       });
-      $('.res-message').each(function() {
-        $(this).text($(this).html().text());
-      });
+      
     });
     socket.on("sendMessage", function (data) {
       //console.log(data.username+", "+sessionStorage.username);
