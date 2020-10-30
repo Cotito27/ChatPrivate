@@ -464,7 +464,7 @@ $(document).ready(function () {
           sessionStorage.foto = fotoUserName;
         }
         
-        sessionStorage.nombre = nomUser.toUpperCase();
+        sessionStorage.nombre = nomUser.toUpperCase().replace(/[_\W]+/g,'_');
         sessionStorage.username = user.toUpperCase().replace(/[_\W]+/g,'_');
         if(!sessionStorage.foto) {
           sessionStorage.foto = $(".imgRegister").attr("src") || fotoDefault;
@@ -795,6 +795,8 @@ $(document).ready(function () {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
       var chatarea = document.querySelector(".card-message");
+      data.message = encodeURI(data.message);
+      //data.message = data.message.replace(/[_\W]+/g,'_');
       if (
         chatarea.offsetHeight + chatarea.scrollTop ==
           chatarea.scrollHeight + 2 ||
@@ -829,7 +831,7 @@ $(document).ready(function () {
             <div class="mycontenidomessage">
               
             <strong class="nom-user-message">${data.nombre}</strong>
-            <p class="res-message"></p>
+            <p class="res-message">${data.message}</p>
             
             </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -849,7 +851,7 @@ $(document).ready(function () {
               <div class="othercontenidomessage">
                
               <strong class="nom-user-message">${data.nombre}</strong>
-              <p class="res-message"></p>
+              <p class="res-message">${data.message}</p>
               
               </div><div class="horamessage">
               <small class="hora">${data.date}</small>
@@ -879,7 +881,7 @@ $(document).ready(function () {
                 <div class="mycontenidomessage">
                   
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message"></p>
+                <p class="res-message">${data.message}</p>
                 
                 </div><div class="horamessage">
                     <small class="hora">${data.date}</small>
@@ -901,7 +903,7 @@ $(document).ready(function () {
                 <div class="othercontenidomessage">
                  
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message"></p>
+                <p class="res-message">${data.message}</p>
                 
                 </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -932,7 +934,7 @@ $(document).ready(function () {
               <div class="mycontenidomessage">
                 
               <strong class="nom-user-message">${data.nombre}</strong>
-              <p class="res-message"></p>
+              <p class="res-message">${data.message}</p>
               
               </div><div class="horamessage">
                   <small class="hora">${data.date}</small>
@@ -952,7 +954,7 @@ $(document).ready(function () {
                 <div class="othercontenidomessage">
                  
                 <strong class="nom-user-message">${data.nombre}</strong>
-                <p class="res-message"></p>
+                <p class="res-message">${data.message}</p>
                 
                 </div><div class="horamessage">
                 <small class="hora">${data.date}</small>
@@ -1025,8 +1027,9 @@ $(document).ready(function () {
                 addSound();
               }
             }
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
             $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
             if($(window).width() > 480) {
@@ -1040,8 +1043,9 @@ $(document).ready(function () {
         }
         if(sessionStorage.username != data.username) {
           if($(`#panelM${data.username}${data.destino}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
             $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
             if($(window).width() > 480) {
@@ -1051,8 +1055,9 @@ $(document).ready(function () {
             }
           }
           if($(`#panelM${data.destino}${data.username}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong>${data.nombre}</strong> <br> ${data.message} <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
+            //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
             $('.toast-info:last').css('background-image', `url("${data.foto || fotoToastDefault}")`);
             if($(window).width() > 480) {
@@ -1088,9 +1093,9 @@ $(document).ready(function () {
       //console.log(data.destino, data.username);
       
       actualizarHistory(data);
-      $('.res-message:last').each(function() {
+      /*$('.res-message:last').each(function() {
         $(this).text(data.message);
-      });
+      });*/
       if (confirmador) {
         chatarea.scrollTop = chatarea.scrollHeight;
       } else {
@@ -1762,7 +1767,25 @@ $(document).ready(function () {
     $(".textMessage").each(function() {   
       $(this).focus();
     });
+    setTimeout(function() {
+      bajarScroll();
+    },500); 
   }
+
+  function switchSheet() {
+    let theme = document.getElementById("theme");
+  
+    if (theme.getAttribute("href") == "/css/theme-dark.css") {
+      theme.href = "/css/theme-light.css";
+    } else {
+      theme.href = "/css/theme-dark.css";
+    }
+  }
+
+  $('.theme').change(function() {
+    switchSheet();
+    console.log('cambiando...');
+  });
 
   function bajarScroll() {
     $(".card-message").each(function() {   

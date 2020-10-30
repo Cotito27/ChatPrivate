@@ -12,14 +12,14 @@
       "user": "admin",
       "password": "123",
       "nombres": "jesus",
-      "nameFoto": "0ojhu7a.png"
+      "nameFoto": "/img/avatar-login3.png"
     },
     {
       "id": 3,
       "user": "luis",
       "password": "123",
       "nombres": "luis",
-      "nameFoto": "0jj5uj1.png"
+      "nameFoto": "0dddqd3.jpg"
     },
     {
       "id": 4,
@@ -40,6 +40,13 @@
       "user": "lol@lol.com",
       "password": "123",
       "nombres": "lol",
+      "nameFoto": "/img/avatar-login3.png"
+    },
+    {
+      "id": 7,
+      "user": "prueba@gmail.com",
+      "password": "123",
+      "nombres": "<h1>prueba</h1>",
       "nameFoto": "/img/avatar-login3.png"
     }
   ]

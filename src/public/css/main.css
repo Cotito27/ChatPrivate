@@ -178,6 +178,10 @@ body {
   background: rgb(245, 245, 245);
   border: 1px solid white;
 }
+#imgUserConfig {
+  background: rgb(245, 245, 245);
+}
+
 img {
   border-radius: 150px;
   /*background-repeat: no-repeat;
@@ -213,6 +217,15 @@ img {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.messageNoti {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 96%;
+  margin: 0;
+  padding: 0;
 }
 
 hr {
@@ -279,6 +292,7 @@ hr {
 
   float: left;
   display: block;
+  background: rgb(245, 245, 245);
 }
 
 #imgUserConfig {
@@ -397,6 +411,7 @@ hr {
 .bs-popover-left > .arrow::after {
   right: 1px;
   border-width: 0.5rem 0 0.5rem 0.5rem;
+  border-right-color: rgb(60, 60, 60);
 }
 .textMessage {
 }
