@@ -169,6 +169,9 @@ $(document).ready(function () {
   $(window).scroll(function() {
     resizePage();
   });
+  $(window).click(function() {
+    resizePage();
+  });
   function changeBackground(element) {
     $(".btnsmenu").css("background", "#343a40");
     $(element).css("background", "purple");
