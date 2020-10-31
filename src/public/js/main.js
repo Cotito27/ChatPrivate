@@ -1896,7 +1896,12 @@ $(document).ready(function () {
   });
   document.querySelector('.btnStickers').addEventListener('click', function(e) {
     var emojiwrapper = document.getElementById('emojiWrapper');
-    emojiwrapper.style.display = 'grid';
+    if(emojiwrapper.style.display == 'none' || !emojiwrapper.style.display) {
+      emojiwrapper.style.display = 'grid';
+    } else {
+      emojiwrapper.style.display = 'none';
+    }
+    
     e.stopPropagation();
   }, false);
   document.getElementById('emojiWrapper').addEventListener('click', function(e) {
