@@ -166,6 +166,9 @@ $(document).ready(function () {
   $(window).resize(function () {
     resizePage();
   });
+  $(window).scroll(function() {
+    resizePage();
+  });
   function changeBackground(element) {
     $(".btnsmenu").css("background", "#343a40");
     $(element).css("background", "purple");
@@ -1762,7 +1765,11 @@ $(document).ready(function () {
     //bajarScroll();
     $(".btnmessage").click();
   }
-
+  $(".textMessage").focus(function() {
+    setTimeout(function() {
+      bajarScroll();
+    },500); 
+  });
   function focusMessage() {
     $(".textMessage").each(function() {   
       $(this).focus();
