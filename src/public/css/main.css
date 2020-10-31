@@ -666,6 +666,9 @@ input[type="file"]#file {
     margin: 0 !important;
     overflow: hidden;
   }
+  #emojiWrapper {
+    right: 0;
+  }
   .card-message {
     height: calc(100vh - 202px);
     max-height: calc(100vh - 202px);
