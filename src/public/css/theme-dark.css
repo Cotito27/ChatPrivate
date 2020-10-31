@@ -89,3 +89,6 @@ textarea,
 .bs-popover-left > .arrow::after {
   border-left-color: black;
 }
+#emojiWrapper {
+  background-color: rgb(19, 18, 18);
+}

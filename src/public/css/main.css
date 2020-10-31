@@ -234,8 +234,10 @@ hr {
   height: 1px;
   background-color: rgb(200, 200, 200);
 }
-.btnenviar {
-  background: white;
+.btnenviar,
+.btnEnvio,
+.btnStickers {
+  background: transparent;
   float: right;
   width: 30px;
   font-size: 18px;
@@ -244,9 +246,27 @@ hr {
   cursor: pointer;
   color: rgb(80, 80, 80);
 }
-.btnenviar:focus {
-  border: none;
-  outline: none;
+/*.form-message:hover {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6) !important;
+}*/
+
+.focus-message {
+  display: flex;
+  width: 100%;
+  border: 1px solid rgb(184, 179, 179);
+  border-radius: 15px;
+}
+.btnenviar:focus,
+.btnEnvio:focus,
+.btnEnvio:hover,
+.btnStickers:focus,
+.btnStickers:hover {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: black !important;
 }
 .elementssubmessage {
   border: 1px solid rgb(190, 190, 190);
@@ -274,6 +294,14 @@ hr {
   resize: none;
   border: none;
   outline: none;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+.textMessage:focus {
+  border: none !important;
+  outline: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 .users-history {
   word-wrap: break-word;
@@ -332,7 +360,8 @@ hr {
   color: rgb(140, 140, 140);
   cursor: pointer;
 }
-
+.fa-paper-plane {
+}
 .fa-comment,
 .fa-user-friends,
 .fa-cog {
@@ -433,10 +462,17 @@ hr {
 textarea {
   resize: none;
   height: 45px !important;
-  width: 85% !important;
+  width: calc(100%-80px) !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
 }
 .btnEnvio {
-  width: 15% !important;
+  width: 45px;
+  float: right;
+}
+.btnStickers {
+  width: 35px;
 }
 .form-message {
   display: flex;
@@ -588,6 +624,38 @@ input[type="file"]#file {
 .imagefile {
   display: none;
 }
+.emoji {
+  border-radius: 0;
+}
+#emojiWrapper {
+  display: none;
+  grid-template-columns: repeat(4, 0fr);
+  gap: 1em;
+  padding: 10px;
+  max-width: 450px;
+  max-height: 400px;
+  overflow: auto;
+  bottom: 65px;
+  right: 20px;
+  position: absolute;
+  background-color: #aaa;
+  box-shadow: 0 0 10px #555;
+}
+#emojiWrapper img {
+  border-radius: 0;
+  width: 83px;
+  height: 83px;
+  margin: 0;
+  padding: 0;
+}
+#emojiWrappet img:hover {
+}
+.img-gif:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 4px blue;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 550px) {
   .container {
     padding: 0 !important;

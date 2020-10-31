@@ -169,6 +169,7 @@ $(document).ready(function () {
   $(window).scroll(function() {
     resizePage();
   });
+  
   function changeBackground(element) {
     $(".btnsmenu").css("background", "#343a40");
     $(element).css("background", "purple");
@@ -687,6 +688,7 @@ $(document).ready(function () {
     //console.log(destino_user,"usuario destino");
     
     var dateTime = moment().format("hh:mm a").toUpperCase();
+    message = message.replace(/[<]+/g,'_').replace(/[>]+/g,'_');
     if (fotoUser == undefined || fotoUser == null || fotoUser == "") {
       socket.emit("sendMessage", {
         username: user,
@@ -797,9 +799,11 @@ $(document).ready(function () {
   function obtenerMensajes() {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
+      data.message = _showEmoji(data.message);
       var chatarea = document.querySelector(".card-message");
-      data.message = encodeURI(data.message);
+      //data.message = encodeURI(data.message);
       //data.message = data.message.replace(/[_\W]+/g,'_');
+      
       if (
         chatarea.offsetHeight + chatarea.scrollTop ==
           chatarea.scrollHeight + 2 ||
@@ -1398,6 +1402,14 @@ $(document).ready(function () {
                 $(`#mensaje${data[i].id}`)
                 .removeClass("othermessage")
                 .addClass("mymessage");
+                data[i].message = _showEmoji(data[i].message);
+              
+                if(data[i].message.includes('<img class="emoji"')) {
+                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                  }
+                }
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
               }
               /*if($(`.message${data[i].username}`)[0]) {
@@ -1414,6 +1426,14 @@ $(document).ready(function () {
                 .removeClass("mymessage")
                 .addClass("othermessage");
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
+                data[i].message = _showEmoji(data[i].message);
+      
+                if(data[i].message.includes('<img class="emoji"')) {
+                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                  }
+                }
               }
               /*if($(`.message${data[i].username}`)[0]) {
                 $(`.message${data[i].username}`).each(function() {
@@ -1512,8 +1532,10 @@ $(document).ready(function () {
     </div>
     <div class="card-footer">
         <div class="form-group form-message">
+        <div class="focus-message">
           <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo"></textarea>
-          <button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
+          <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
+        </div>
         </div>
       </div>
       </div>`;
@@ -1770,6 +1792,66 @@ $(document).ready(function () {
       bajarScroll();
     },500); 
   });
+  function darColorFocus() {
+    $(".textMessage").each(function() {   
+      $(this).focus(function() {
+        $(this).parent($('.focus-message')).css({
+          'display': 'flex',
+          'border': '1px solid rgb(142, 113, 151)',
+          'box-shadow': '0 0 0 0.2rem rgba(255, 0, 234, 0.25)',
+          'width': '100%'
+        });
+      });
+      $(this).blur(function() {
+        $(this).parent($('.focus-message')).css({
+          'display': 'flex',
+          'border': '1px solid rgb(184, 179, 179)',
+          'box-shadow': 'none',
+          'width': '100%'
+        });
+      });
+    });
+  }
+  darColorFocus();
+  /*const observer = new MutationObserver((mutationList) => { 
+    mutationList.forEach((mutation)=> {
+    if(mutation.addedNodes.length){
+    console.log('Añadido', mutation.addedNodes[0]);
+    darColorFocus();
+    $('.textMessage').focus();
+    }
+   if(mutation.removedNodes.length){
+    console.log('Eliminado', mutation.removedNodes[0]);
+    }
+   //console.log(mutation.type);
+    
+    })
+   });
+   const equipos = document.querySelector('.components-message'); 
+   // Opcions para el observer 
+   const observerOptions = { 
+    attributes: true, 
+    childList: true, 
+    subtree: true,
+    characterData: false,
+    attributeOldValue: false,
+    characterDataOldValue: false
+   };
+   observer.observe(equipos, observerOptions);*/
+   $('.components-message').bind("DOMSubtreeModified",function(){
+     console.log('Cambiando...');
+     darColorFocus();
+     $('.textMessage').focus();
+     verificarEmoji();
+    }); 
+    verificarEmoji();
+  function verificarEmoji() {
+    $('.contenidomessagenofocus').each(function() {
+      if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:')) {
+        $(this).html('<i class="far fa-clipboard"></i> Sticker.');
+      }
+     });
+  }
   function focusMessage() {
     $(".textMessage").each(function() {   
       $(this).focus();
@@ -1793,6 +1875,53 @@ $(document).ready(function () {
     switchSheet();
     console.log('cambiando...');
   });
+    function _initialEmoji() {
+      var emojiContainer = document.getElementById('emojiWrapper'),
+          docFragment = document.createDocumentFragment();
+      for (var i = 69; i > 0; i--) {
+          var emojiItem = document.createElement('img');
+          emojiItem.src = '/img/emoji/' + i + '.gif';
+          emojiItem.title = i;
+          emojiItem.className = 'img-gif';
+          docFragment.appendChild(emojiItem);
+      };
+      emojiContainer.appendChild(docFragment);
+  }
+  _initialEmoji();
+  document.body.addEventListener('click', function(e) {
+      var emojiwrapper = document.getElementById('emojiWrapper');
+      if (e.target != emojiwrapper) {
+          emojiwrapper.style.display = 'none';
+      };
+  });
+  document.querySelector('.btnStickers').addEventListener('click', function(e) {
+    var emojiwrapper = document.getElementById('emojiWrapper');
+    emojiwrapper.style.display = 'grid';
+    e.stopPropagation();
+  }, false);
+  document.getElementById('emojiWrapper').addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.nodeName.toLowerCase() == 'img') {
+        var messageInput = document.querySelector('.textMessage');
+        messageInput.focus();
+        messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
+    };
+  }, false);
+  function _showEmoji(msg) {
+    var match, result = msg,
+        reg = /\[emoji:\d+\]/g,
+        emojiIndex,
+        totalEmojiNum = document.getElementById('emojiWrapper').children.length;
+    while (match = reg.exec(msg)) {
+        emojiIndex = match[0].slice(7, -1);
+        if (emojiIndex > totalEmojiNum) {
+            result = result.replace(match[0], '[X]');
+        } else {
+            result = result.replace(match[0], '<img class="emoji" src="/img/emoji/' + emojiIndex + '.gif" />');//todo:fix this in chrome it will cause a new request for the image
+        };
+    };
+    return result;
+  }
 
   function bajarScroll() {
     $(".card-message").each(function() {   
@@ -1801,6 +1930,14 @@ $(document).ready(function () {
     /*$(".card-message").scrollTop($(".card-message").prop("scrollHeight"));*/
     //console.log("bajando!!");
   }
+  document.getElementById('emojiWrapper').addEventListener('click', function(e) {
+            var target = e.target;
+            if (target.nodeName.toLowerCase() == 'img') {
+                var messageInput = document.getElementById('messageInput');
+                messageInput.focus();
+                messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
+            };
+        }, false);
   bajarScroll();
   function redirectUserDisconnect() {
     socket.on('redirectUser', function(user) {
