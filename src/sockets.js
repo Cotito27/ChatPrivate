@@ -183,7 +183,7 @@ module.exports = [
       socket.on("buscarUser", function (user) {
         let respuesta = [];
         for (var i = 0; i < usersOnline.length; i++) {
-          var valor = "" + usersOnline[i].username;
+          var valor = "" + usersOnline[i].nombre;
           //console.log(valor);
           //console.log(valor.includes(data));//true
           if (valor.toUpperCase().includes(user.toUpperCase())) {
