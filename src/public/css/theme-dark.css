@@ -62,7 +62,7 @@ input[type="text"],
 textarea,
 #textMessage,
 .textMessage {
-  color: whitesmoke;
+  color: whitesmoke !important;
   background-color: rgb(36, 36, 36);
 }
 .form-control:focus {
