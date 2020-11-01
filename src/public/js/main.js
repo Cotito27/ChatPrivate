@@ -820,7 +820,12 @@ $(document).ready(function () {
       }
       
       
-      var chatarea = document.querySelector(".card-message");
+      var chatarea = "";
+      $('.card-message').each(function() {
+        if($(this).is(':visible')) {
+          chatarea = this;
+        }
+      });
       //data.message = encodeURI(data.message);
       //data.message = data.message.replace(/[_\W]+/g,'_');
       
@@ -1612,7 +1617,7 @@ $(document).ready(function () {
         $('.components-message').append(html);
       }
       darColorFocus();
-      $('.textMessage').focus();
+      //$('.textMessage').focus();
       verificarEmoji();
       eventsEmoji();
       
@@ -2054,7 +2059,26 @@ $(document).ready(function () {
   detectarCambioApodo();
   let nickNameChange = [];
   function detectarCambioApodo() {
+    
     socket.on('cambiarApodo', function(data) {
+      var chatarea = "";
+      $('.card-message').each(function() {
+        if($(this).is(':visible')) {
+          chatarea = this;
+        }
+      });
+      //data.message = encodeURI(data.message);
+      //data.message = data.message.replace(/[_\W]+/g,'_');
+      let confirmador = false;
+      if (
+        chatarea.offsetHeight + chatarea.scrollTop ==
+          chatarea.scrollHeight + 2 ||
+        chatarea.offsetHeight + chatarea.scrollTop >= chatarea.scrollHeight
+      ) {
+        confirmador = true;
+      } else {
+        confirmador = false;
+      }
       $('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message').text(data.lastApodo);
       if(!$('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message')[0]) {
         $('#Todos').find(`.message${data.identOtherUser}`).find('.othercontenidomessage').find('.nom-user-message').text(data.lastApodo);
@@ -2081,7 +2105,11 @@ $(document).ready(function () {
         }
         
       }
-      
+      if (confirmador) {
+        chatarea.scrollTop = chatarea.scrollHeight;
+      } else {
+        //controladormessagescroll++;
+      }
     });
   }
   function bajarScroll() {
