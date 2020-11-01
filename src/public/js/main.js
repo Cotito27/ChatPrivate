@@ -716,10 +716,7 @@ $(document).ready(function () {
     /*$(".textMessage").off('keypress',function(e){});
     $(".btnenvio").off('click',function(){});*/
     $('.textMessage').off('keypress').on('keypress', function (e) {
-      if($(this).val().includes('[') || $(this).val().includes(']')) {
-        e.preventDefault();
-        return;
-      }
+      
       if (e.keyCode == 13) {
         e.preventDefault();
         //console.log('Evento!!');
@@ -729,6 +726,11 @@ $(document).ready(function () {
             $(this).val(),
             sessionStorage.foto
           );
+        }
+      } else {
+          if($(this).val().includes('[') || $(this).val().includes(']')) {
+          e.preventDefault();
+          return;
         }
       }
 
