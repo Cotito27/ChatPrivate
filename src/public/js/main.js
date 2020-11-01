@@ -637,6 +637,7 @@ $(document).ready(function () {
       }
       let userlast = "";
       let html = updateUsers(data, false);
+      editNickName(data);
       //console.log(verificar, sessionStorage.username);
       if(verificar!=sessionStorage.username){
         for(let i=0; i<data.length; i++) {
@@ -807,6 +808,18 @@ $(document).ready(function () {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
       data.message = _showEmoji(data.message);
+      if(data.destino == "Todos") {
+        for(let i=0; i<nickNameChange.length; i++) {
+          //console.log(nickNameChange[i]);
+          if(nickNameChange[i].usuario != "") {
+            if(nickNameChange[i].usuario == data.username) {
+              data.nombre = nickNameChange[i].nombre;
+            }
+          }
+        }
+      }
+      
+      
       var chatarea = document.querySelector(".card-message");
       //data.message = encodeURI(data.message);
       //data.message = data.message.replace(/[_\W]+/g,'_');
@@ -1085,6 +1098,7 @@ $(document).ready(function () {
         $('.mensajeOtherNoti').each(function() {
           $(this).click(function() {
             socket.emit('focusHistory');
+            $(".btnmessage").click();
               /*$('.row').hide();
               $('#content-history').show();*/
             
@@ -1597,7 +1611,9 @@ $(document).ready(function () {
       if(!$(`#panelM${sessionStorage.username}${destinoFinal}`)[0]) {
         $('.components-message').append(html);
       }
-      
+      darColorFocus();
+      $('.textMessage').focus();
+      verificarEmoji();
       eventsEmoji();
       
       backPanelMessages(true);
@@ -1695,6 +1711,7 @@ $(document).ready(function () {
     });*/
 
     addEventsMessage();
+    
     //bajarScroll();
     //$(".btnmessage").click();
   }
@@ -1730,6 +1747,9 @@ $(document).ready(function () {
       });
       
       $('.components-message').append(html);
+      darColorFocus();
+      $('.textMessage').focus();
+      verificarEmoji();
       eventsEmoji();
       
       backPanelMessages(false);
@@ -1851,13 +1871,11 @@ $(document).ready(function () {
     characterDataOldValue: false
    };
    observer.observe(equipos, observerOptions);*/
-   $('.components-message').bind("DOMSubtreeModified",function(){
+   /*$('.components-message').bind("DOMSubtreeModified",function(){
      console.log('Cambiando...');
-     darColorFocus();
-     $('.textMessage').focus();
-     verificarEmoji();
+     
      //eventsEmoji();
-    }); 
+    }); */
     verificarEmoji();
   function verificarEmoji() {
 
@@ -1982,7 +2000,90 @@ $(document).ready(function () {
     };
     return result;
   }
-
+  function editNickName(users) {
+    let html = "";
+    for(let i=0; i<users.length; i++) {
+      html+=`<div class="user-edit iduserEdit${users[i].username} nameuserEdit${users[i].nombre}">
+        <img class="img-edit" src="${users[i].foto}">
+        <label class="name-edit">${users[i].nombre}</label>
+        <button class="btn float-right btnCambiarApodo text-white"  data-toggle="modal" data-target="#modalChangeNick"><i class="fas fa-pencil-alt"></i> Establecer apodo</button>
+      </div>`;
+    }
+    $('.content-edit').html(html);
+    $('.btnCambiarApodo').click(function() {
+      let response = $(this).parent().prop('class').split(' ');
+      let nombre = "";
+      let usuario = "";
+      usuario = response[1].replace('iduserEdit', '');
+      nombre = response[2].replace('nameuserEdit', '');
+      if(usuario == sessionStorage.username) {
+        $('.identEdit').text('Edita tu apodo');
+      } else {
+        $('.identEdit').text(`Edita el apodo de ${nombre}`);
+      }
+      $('.inputEdit').prop('placeholder',nombre);
+      setTimeout(function() {
+        $('.inputEdit').focus();
+      }, 500);
+      
+      $('.inputEdit').keyup(function(e) {
+        if($(this).val() == '') {
+          $('.guardarEdit').prop('disabled','disabled');
+        } else {
+          $('.guardarEdit').removeAttr('disabled');
+          if(e.keyCode == 13) {
+            $('.guardarEdit').click();
+          }
+        }
+      });
+      $('.guardarEdit').off('click').on('click', function() {
+        console.log('Cambiando Apodo...');
+        socket.emit('cambiarApodo', {
+          originalName: nombre,
+          identOtherUser: usuario,
+          lastApodo: $('.inputEdit').val(),
+          userName: sessionStorage.nombre,
+          identUser: sessionStorage.username
+        });
+        $('.close').click();
+        $('.inputEdit').val('');
+        $(this).prop('disabled','disabled');
+      });
+    });
+  }
+  detectarCambioApodo();
+  let nickNameChange = [];
+  function detectarCambioApodo() {
+    socket.on('cambiarApodo', function(data) {
+      $('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message').text(data.lastApodo);
+      if(!$('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message')[0]) {
+        $('#Todos').find(`.message${data.identOtherUser}`).find('.othercontenidomessage').find('.nom-user-message').text(data.lastApodo);
+      }
+      nickNameChange.push({
+        usuario: data.identOtherUser,
+        nombre: data.lastApodo
+      });
+      
+      if(data.originalName == sessionStorage.nombre && data.identUser == sessionStorage.username && data.userName == sessionStorage.nombre) {
+        $('#Todos').append(`<div class="systemEdit">Has cambiado tu apodo a ${data.lastApodo}</div>`);
+      } else {
+        if(data.identOtherUser == data.identUser) {
+          $('#Todos').append(`<div class="systemEdit">${data.userName} ha cambiado su apodo a ${data.lastApodo}</div>`);
+        }  
+        else if(data.identOtherUser == sessionStorage.username) {
+          $('#Todos').append(`<div class="systemEdit">${data.userName} te ha cambiado el apodo de ${data.originalName} a ${data.lastApodo}</div>`);
+        } else {
+          if(data.identUser == sessionStorage.username) {
+            $('#Todos').append(`<div class="systemEdit">Has cambiado el apodo de ${data.originalName} a ${data.lastApodo}</div>`);
+          } else {
+            $('#Todos').append(`<div class="systemEdit">${data.userName} ha cambiado el apodo de ${data.originalName} a ${data.lastApodo}</div>`); 
+          }
+        }
+        
+      }
+      
+    });
+  }
   function bajarScroll() {
     $(".card-message").each(function() {   
       $(this).scrollTop($(this).prop("scrollHeight"));

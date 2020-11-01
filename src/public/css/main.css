@@ -178,6 +178,23 @@ body {
   background: rgb(245, 245, 245);
   border: 1px solid white;
 }
+.img-edit {
+  width: 40px;
+  height: 40px;
+  float: left;
+  display: block;
+  margin-right: 9px;
+  margin-top: 1px;
+  background: rgb(245, 245, 245);
+  border: 1px solid white;
+}
+.name-edit {
+  margin-top: 7px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 50%;
+}
 #imgUserConfig {
   background: rgb(245, 245, 245);
 }
@@ -218,7 +235,24 @@ img {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+.content-edit {
+  max-height: 500px;
+  overflow: auto;
+}
+.user-edit {
+  display: block;
+  margin-top: 10px;
+}
+.btnCambiarApodo,
+.btnCancelarApodo {
+  background: rgb(90, 5, 116);
+  color: white;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+.btnCambiarApodo:hover,
+.btnCancelarApodo:hover {
+  background: rgb(121, 31, 148);
+}
 .messageNoti {
   overflow: hidden;
   white-space: nowrap;
@@ -267,6 +301,10 @@ hr {
   background: transparent !important;
   box-shadow: none !important;
   color: black !important;
+}
+.btnEnvio:hover,
+.btnStickers:hover {
+  transform: scale(1.2);
 }
 .elementssubmessage {
   border: 1px solid rgb(190, 190, 190);
@@ -367,7 +405,6 @@ hr {
 .fa-cog {
   cursor: pointer;
 }
-
 .messageschatnoti:hover,
 .contenidotitulo:hover {
   background: rgb(241, 241, 241) !important;
@@ -385,7 +422,12 @@ hr {
 .newMessage {
   background: rgb(215, 215, 215);
 }
-
+.systemEdit {
+  text-align: center;
+  background-color: rgb(220, 220, 220);
+  color: black;
+  font-weight: lighter;
+}
 .panel-message {
   position: relative;
 }
@@ -654,6 +696,16 @@ input[type="file"]#file {
   transform: scale(1.2);
   box-shadow: 0 0 4px blue;
   cursor: pointer;
+}
+.iconEdit {
+  float: right;
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.iconEdit:hover {
+  transform: scale(1.2);
 }
 
 @media only screen and (max-width: 550px) {

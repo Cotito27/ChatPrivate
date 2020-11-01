@@ -205,6 +205,9 @@ module.exports = [
       socket.on("focusHistory", function() {
         socket.emit("focusHistory");
       });
+      socket.on("cambiarApodo", function(data) {
+        io.emit("cambiarApodo", data);
+      });
     });
   },
 ];

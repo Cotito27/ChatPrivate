@@ -45,6 +45,9 @@ hr {
 .container-destino {
   border-bottom: 1px solid rgb(120, 120, 120) !important;
 }
+.card-footer {
+  border-top: 1px solid rgb(120, 120, 120) !important;
+}
 #guardarCambios {
   background-color: teal;
 }
@@ -91,4 +94,12 @@ textarea,
 }
 #emojiWrapper {
   background-color: rgb(19, 18, 18);
+}
+.newMessage {
+  background: rgb(86, 86, 86) !important;
+}
+.systemEdit {
+  text-align: center;
+  background-color: rgb(40, 40, 40);
+  color: white;
 }
