@@ -1533,6 +1533,7 @@ $(document).ready(function () {
     <div class="card-footer">
         <div class="form-group form-message">
         <div class="focus-message">
+        <div id="emojiWrapper" class="emojiWrapper"></div>
           <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo"></textarea>
           <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
         </div>
@@ -1585,7 +1586,7 @@ $(document).ready(function () {
         $('.components-message').append(html);
       }
       
-      
+      //eventsEmoji();
       
       backPanelMessages(true);
 
@@ -1717,7 +1718,7 @@ $(document).ready(function () {
       });
       
       $('.components-message').append(html);
-      
+      eventsEmoji();
       
       backPanelMessages(false);
 
@@ -1843,6 +1844,7 @@ $(document).ready(function () {
      darColorFocus();
      $('.textMessage').focus();
      verificarEmoji();
+     eventsEmoji();
     }); 
     verificarEmoji();
   function verificarEmoji() {
@@ -1876,42 +1878,59 @@ $(document).ready(function () {
     console.log('cambiando...');
   });
     function _initialEmoji() {
-      var emojiContainer = document.getElementById('emojiWrapper'),
+      var emojiContainer = document.querySelectorAll('.emojiWrapper'),
           docFragment = document.createDocumentFragment();
-      for (var i = 69; i > 0; i--) {
-          var emojiItem = document.createElement('img');
-          emojiItem.src = '/img/emoji/' + i + '.gif';
-          emojiItem.title = i;
-          emojiItem.className = 'img-gif';
-          docFragment.appendChild(emojiItem);
-      };
-      emojiContainer.appendChild(docFragment);
+          if(emojiContainer[emojiContainer.length-1].innerHTML == '') {
+            for (var i = 69; i > 0; i--) {
+              var emojiItem = document.createElement('img');
+              emojiItem.src = '/img/emoji/' + i + '.gif';
+              emojiItem.title = i;
+              emojiItem.className = 'img-gif';
+              docFragment.appendChild(emojiItem);
+          };
+          emojiContainer[emojiContainer.length-1].appendChild(docFragment);
+          }
   }
   _initialEmoji();
-  document.body.addEventListener('click', function(e) {
-      var emojiwrapper = document.getElementById('emojiWrapper');
-      if (e.target != emojiwrapper) {
-          emojiwrapper.style.display = 'none';
-      };
-  });
-  document.querySelector('.btnStickers').addEventListener('click', function(e) {
-    var emojiwrapper = document.getElementById('emojiWrapper');
-    if(emojiwrapper.style.display == 'none' || !emojiwrapper.style.display) {
-      emojiwrapper.style.display = 'grid';
-    } else {
-      emojiwrapper.style.display = 'none';
-    }
+  eventsEmoji();
+  
+  function eventsEmoji() {
     
-    e.stopPropagation();
-  }, false);
-  document.getElementById('emojiWrapper').addEventListener('click', function(e) {
-    var target = e.target;
-    if (target.nodeName.toLowerCase() == 'img') {
-        var messageInput = document.querySelector('.textMessage');
-        messageInput.focus();
-        messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
-    };
-  }, false);
+    _initialEmoji();
+    document.body.addEventListener('click', function(e) {
+      var $emojiwrapper = $('.emojiWrapper');
+        if ($(e.target) != $emojiwrapper) {
+          $emojiwrapper.css('display','none');
+      };
+      
+      
+  });
+
+    $('.btnStickers').off('click').on('click', function(e) {
+      console.log('xd');
+      
+      var $emojiwrapper = $('.emojiWrapper');
+      //console.log($emojiwrapper.css('display'));
+      if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display')) {
+        $emojiwrapper.css('display', 'grid');
+      } else {
+        $emojiwrapper.css('display', 'none');
+      }
+      
+      e.stopPropagation();
+    });
+
+    $('.emojiWrapper').off('click').on('click', function(e) {
+      var target = e.target;
+      if (target.nodeName.toLowerCase() == 'img') {
+          var messageInput = document.querySelector('.textMessage');
+          messageInput.focus();
+          messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
+      };
+    });
+  
+  
+  }
   function _showEmoji(msg) {
     var match, result = msg,
         reg = /\[emoji:\d+\]/g,
@@ -1935,14 +1954,7 @@ $(document).ready(function () {
     /*$(".card-message").scrollTop($(".card-message").prop("scrollHeight"));*/
     //console.log("bajando!!");
   }
-  document.getElementById('emojiWrapper').addEventListener('click', function(e) {
-            var target = e.target;
-            if (target.nodeName.toLowerCase() == 'img') {
-                var messageInput = document.getElementById('messageInput');
-                messageInput.focus();
-                messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
-            };
-        }, false);
+ 
   bajarScroll();
   function redirectUserDisconnect() {
     socket.on('redirectUser', function(user) {
