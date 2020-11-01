@@ -716,6 +716,10 @@ $(document).ready(function () {
     /*$(".textMessage").off('keypress',function(e){});
     $(".btnenvio").off('click',function(){});*/
     $('.textMessage').off('keypress').on('keypress', function (e) {
+      if($(this).val().includes('[') || $(this).val().includes(']')) {
+        e.preventDefault();
+        return;
+      }
       if (e.keyCode == 13) {
         e.preventDefault();
         //console.log('Evento!!');
@@ -727,6 +731,7 @@ $(document).ready(function () {
           );
         }
       }
+
     });
     /*$(".textMessage").keypress(function (e) {  
       if (e.keyCode == 13) {
@@ -1855,7 +1860,7 @@ $(document).ready(function () {
   function verificarEmoji() {
 
     $('.contenidomessagenofocus').each(function() {
-      console.log($(this).html());
+      //console.log($(this).html());
       if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:')) {
         $(this).html('<i class="far fa-clipboard"></i> Sticker.');
       }
