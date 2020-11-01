@@ -1087,7 +1087,12 @@ $(document).ready(function () {
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
         console.log(data.username, data.destino);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
-          $(`#userhistory${data.destino}${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
+          if(data.message.includes('<img class="emoji"')) {
+            $(`#userhistory${data.destino}${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').html('<i class="far fa-clipboard"></i> Sticker.');
+          } else {
+            $(`#userhistory${data.destino}${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
+          }
+          
         //console.log('Llego');
         }
         /*$('.panel-message').each(function() {
@@ -1586,7 +1591,7 @@ $(document).ready(function () {
         $('.components-message').append(html);
       }
       
-      //eventsEmoji();
+      eventsEmoji();
       
       backPanelMessages(true);
 
@@ -1844,11 +1849,13 @@ $(document).ready(function () {
      darColorFocus();
      $('.textMessage').focus();
      verificarEmoji();
-     eventsEmoji();
+     //eventsEmoji();
     }); 
     verificarEmoji();
   function verificarEmoji() {
+
     $('.contenidomessagenofocus').each(function() {
+      console.log($(this).html());
       if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:')) {
         $(this).html('<i class="far fa-clipboard"></i> Sticker.');
       }
@@ -1919,15 +1926,37 @@ $(document).ready(function () {
       
       e.stopPropagation();
     });
-
-    $('.emojiWrapper').off('click').on('click', function(e) {
-      var target = e.target;
-      if (target.nodeName.toLowerCase() == 'img') {
-          var messageInput = document.querySelector('.textMessage');
-          messageInput.focus();
-          messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
-      };
+    /*$('.panel-message').each(function() {
+      if(!$(this).is(':hidden')) {
+        $(this).find('.card-footer').find('.form-message').find('.focus-message').find('.emojiWrapper').on('click', function(e) {
+          var target = e.target;
+          console.log(target);
+          if (target.nodeName.toLowerCase() == 'img') {
+            console.log('xd2');
+              var messageInput = document.querySelector('.textMessage');
+              messageInput.focus();
+              messageInput.value = messageInput.value + '[emoji:' + target.title + ']';
+          };
+        });
+      }
+    });*/
+    let contadorId = -1;
+    $('.emojiWrapper').each(function() {
+  
+      $(this).off('click').on('click', function(e) {
+        var target = e.target;
+        console.log(target);
+        if (target.nodeName.toLowerCase() == 'img') {
+          console.log('xd2');
+            var $messageInput = $(this).parent().find('.textMessage');
+            $messageInput.focus();
+            $messageInput.val($messageInput.val() + '[emoji:' + target.title + ']');
+        };
+      });
     });
+    
+    //if($('.panel-message').is(':visible')) {}
+    
   
   
   }
