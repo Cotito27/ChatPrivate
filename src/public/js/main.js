@@ -2012,6 +2012,7 @@ $(document).ready(function () {
         <img class="img-edit" src="${users[i].foto}">
         <label class="name-edit">${users[i].nombre}</label>
         <button class="btn float-right btnCambiarApodo text-white"  data-toggle="modal" data-target="#modalChangeNick"><i class="fas fa-pencil-alt"></i> Establecer apodo</button>
+        <input type="hidden" class="apodoName${users[i].username}" value="">
       </div>`;
     }
     $('.content-edit').html(html);
@@ -2021,38 +2022,63 @@ $(document).ready(function () {
       let usuario = "";
       usuario = response[1].replace('iduserEdit', '');
       nombre = response[2].replace('nameuserEdit', '');
+      
       if(usuario == sessionStorage.username) {
         $('.identEdit').text('Edita tu apodo');
       } else {
         $('.identEdit').text(`Edita el apodo de ${nombre}`);
       }
-      $('.inputEdit').prop('placeholder',nombre);
+        
+        $('.inputEdit').prop('placeholder',nombre); 
+        if($(this).parent().find(`.apodoName${usuario}`).val() != $('.inputEdit').prop('placeholder')) 
+        {
+          $('.inputEdit').val($(this).parent().find(`.apodoName${usuario}`).val());
+        } else {
+          $('.inputEdit').val('');
+        }
+        $('.ident-edit-user').val(usuario);
+       // $('.inputEdit').val()
       setTimeout(function() {
         $('.inputEdit').focus();
       }, 500);
       
       $('.inputEdit').keyup(function(e) {
-        if($(this).val() == '') {
+        /*if($(this).val() == '') {
           $('.guardarEdit').prop('disabled','disabled');
         } else {
           $('.guardarEdit').removeAttr('disabled');
-          if(e.keyCode == 13) {
-            $('.guardarEdit').click();
-          }
+          
+        }*/
+        if(e.keyCode == 13) {
+          $('.guardarEdit').click();
         }
       });
       $('.guardarEdit').off('click').on('click', function() {
         console.log('Cambiando Apodo...');
+        let responseEdit = "";
+        let respuestaFinal = false;
+        if($('.inputEdit').val() == '') {
+          //console.log($(`.message${$('.ident-edit-user').val()}`).find('.othercontenidomessage').find('.nom-user-message').text(), $('.inputEdit').prop('placeholder'));
+          //console.log($('.mymessage').html());
+          if($(`.message${$('.ident-edit-user').val()}`).find('.othercontenidomessage').find('.nom-user-message').text().includes($('.inputEdit').prop('placeholder')) || $(`.message${$('.ident-edit-user').val()}`).find('.mycontenidomessage').find('.nom-user-message').text().includes($('.inputEdit').prop('placeholder')) || $(`.message${$('.ident-edit-user').val()}`).html().includes($('.inputEdit').prop('placeholder')) || $(`.apodoName${$('.ident-edit-user').val()}`).val() == '') {
+            return;
+          } else {
+            responseEdit = '';
+          }
+          
+        } else {
+          responseEdit = $('.inputEdit').val();
+        }
         socket.emit('cambiarApodo', {
           originalName: nombre,
           identOtherUser: usuario,
-          lastApodo: $('.inputEdit').val(),
+          lastApodo: responseEdit,
           userName: sessionStorage.nombre,
           identUser: sessionStorage.username
         });
         $('.close').click();
         $('.inputEdit').val('');
-        $(this).prop('disabled','disabled');
+        //$(this).prop('disabled','disabled');
       });
     });
   }
@@ -2067,6 +2093,8 @@ $(document).ready(function () {
           chatarea = this;
         }
       });
+      $(`.apodoName${data.identOtherUser}`).val(data.lastApodo);
+      
       //data.message = encodeURI(data.message);
       //data.message = data.message.replace(/[_\W]+/g,'_');
       let confirmador = false;
@@ -2079,16 +2107,40 @@ $(document).ready(function () {
       } else {
         confirmador = false;
       }
+      
       $('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message').text(data.lastApodo);
       if(!$('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message')[0]) {
         $('#Todos').find(`.message${data.identOtherUser}`).find('.othercontenidomessage').find('.nom-user-message').text(data.lastApodo);
       }
       nickNameChange.push({
         usuario: data.identOtherUser,
-        nombre: data.lastApodo
+        nombre: data.lastApodo || data.originalName
       });
-      
-      if(data.originalName == sessionStorage.nombre && data.identUser == sessionStorage.username && data.userName == sessionStorage.nombre) {
+      if(data.lastApodo == '') {
+        if(data.originalName == sessionStorage.nombre && data.identUser == sessionStorage.username && data.userName == sessionStorage.nombre) {
+          $('#Todos').append(`<div class="systemEdit">Has borrado tu apodo</div>`);
+        } else {
+          if(data.identOtherUser == data.identUser) {
+            $('#Todos').append(`<div class="systemEdit">${data.userName} ha borrado su apodo</div>`);
+          }  
+          else if(data.identOtherUser == sessionStorage.username) {
+            $('#Todos').append(`<div class="systemEdit">${data.userName} ha borrado tu apodo</div>`);
+          } else {
+            if(data.identUser == sessionStorage.username) {
+              $('#Todos').append(`<div class="systemEdit">Has borrado el apodo de ${data.originalName}</div>`);
+            } else {
+              $('#Todos').append(`<div class="systemEdit">${data.userName} ha borrado el apodo de ${data.originalName}</div>`); 
+            }
+          }
+          
+        }
+          $('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message').text(data.originalName);
+        if(!$('#Todos').find(`.message${data.identOtherUser}`).find('.mycontenidomessage').find('.nom-user-message')[0]) {
+          $('#Todos').find(`.message${data.identOtherUser}`).find('.othercontenidomessage').find('.nom-user-message').text(data.originalName);
+        }
+        
+      } 
+      else if(data.originalName == sessionStorage.nombre && data.identUser == sessionStorage.username && data.userName == sessionStorage.nombre) {
         $('#Todos').append(`<div class="systemEdit">Has cambiado tu apodo a ${data.lastApodo}</div>`);
       } else {
         if(data.identOtherUser == data.identUser) {
