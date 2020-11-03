@@ -2046,8 +2046,8 @@ $(document).ready(function () {
   function editNickName(users) {
     let html = "";
     for(let i=0; i<users.length; i++) {
-      html+=`<div class="user-edit iduserEdit${users[i].username} nameuserEdit${users[i].nombre} message${users[i].username}">
-        <img class="img-edit" src="${users[i].foto}">
+      html+=`<div class="user-edit iduserEdit${users[i].username} nameuserEdit${users[i].nombre}">
+        <img class="img-edit message${users[i].username}" src="${users[i].foto}">
         <label class="name-edit">${users[i].nombre}</label>
         <button class="btn float-right btnCambiarApodo text-white"  data-toggle="modal" data-target="#modalChangeNick"><i class="fas fa-pencil-alt"></i> Establecer apodo</button>
         <input type="hidden" class="apodoName${users[i].username}" value="">
