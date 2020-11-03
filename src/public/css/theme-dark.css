@@ -13,7 +13,8 @@ body {
 .otherUserName {
   color: rgb(200, 200, 200) !important;
 }
-.far {
+.far,
+.fas {
   color: whitesmoke !important;
 }
 .mymessage {

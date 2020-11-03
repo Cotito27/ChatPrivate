@@ -1150,7 +1150,8 @@ $(document).ready(function () {
         username: data.username,
         foto: data.foto
       });
-      
+      verificarEmoji();
+      verificarAudio();
     });
     socket.on("sendMessage", function (data) {
       //console.log(data.username+", "+sessionStorage.username);
@@ -1394,8 +1395,7 @@ $(document).ready(function () {
         /*for (let i = 0; i < data.length; i++) {
           }*/
     }
-    verificarEmoji();
-    verificarAudio();
+    
   }
   let finalStorage = JSON.parse(
     sessionStorage.getItem("message" + sessionStorage.codigo)
@@ -1913,7 +1913,8 @@ $(document).ready(function () {
 
     $('.contenidomessagenofocus').each(function() {
       //console.log($(this).html());
-      if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:')) {
+      console.log($(this).html());
+      if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:') || $(this).html().includes('&lt;img class="emoji"')) {
         $(this).html('<i class="far fa-clipboard"></i> Sticker.');
       }
      });
