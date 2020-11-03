@@ -278,7 +278,7 @@ $(document).ready(function () {
       } else {
         
         $('#content-history').hide();
-        let userVar = $(this).find(".contenidochatmessages").find(".name-user-history").html();
+        let userVar = $(this).find(".contenidochatmessages").find(".name-user-history").text();
         let destino = $('.panel-message').find('.container-destino').find('.selectorUser').val();
         var idHistory = this.id.replace('userhistory','');
         if(idHistory == -1 || idHistory == "-1") {
@@ -809,21 +809,37 @@ $(document).ready(function () {
   function obtenerMensajes() {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
+      //console.log(data.message);
       data.message = _showEmoji(data.message);
+      //console.log(data.message);
       if(data.message.includes('<video width="340" height="50" controls>') && data.message.includes('<source src="') && data.message.includes('" type="video/webm" />')) {
         
       } else {
         
       }
+      
       if(data.destino == "Todos") {
         for(let i=0; i<nickNameChange.length; i++) {
           //console.log(nickNameChange[i]);
           if(nickNameChange[i].usuario != "") {
             if(nickNameChange[i].usuario == data.username) {
               data.nombre = nickNameChange[i].nombre;
-            }
+            } 
           }
         }
+        //console.log(data.nombre);
+        //console.log($(`.message${data.username}:not(img):last`).find('.nom-user-message').text());
+        /*if($(`.message${data.username}:not(img)`).find('.nom-user-message').text().includes(data.nombre)) {
+          
+            $(`.message${data.username}:not(img)`).find('.nom-user-message').each(function() {
+              $(this).text(data.nombre);
+              console.log($(this).text(), data.nombre);
+            });
+              //console.log($(`.message${data.username}:not(img)`).find('.nom-user-message').text());
+              //console.log('Hecho');
+          
+        }*/
+        
       }
       
       
@@ -1441,21 +1457,25 @@ $(document).ready(function () {
                 .removeClass("othermessage")
                 .addClass("mymessage");
                 data[i].message = _showEmoji(data[i].message);
-              
-                if(data[i].message.includes('<img class="emoji"')) {
-                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
-                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
-                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                
+                if(JSON.stringify(data[i].message) != '{}'){
+                  console.log('xd21');
+                  if(data[i].message.includes('<img class="emoji"')) {
+                    $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                    if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                      $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                    }
+                  }
+                  if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
+                    $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                    if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                      $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                    }
+                  } else {
+                    
                   }
                 }
-                if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
-                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
-                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
-                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
-                  }
-                } else {
-                  
-                }
+                
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
               }
               /*if($(`.message${data[i].username}`)[0]) {
@@ -1473,21 +1493,24 @@ $(document).ready(function () {
                 .addClass("othermessage");
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
                 data[i].message = _showEmoji(data[i].message);
-      
-                if(data[i].message.includes('<img class="emoji"')) {
-                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
-                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
-                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+               
+                if(JSON.stringify(data[i].message) != '{}'){
+                  if(data[i].message.includes('<img class="emoji"')) {
+                    $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                    if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                      $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                    }
+                  }
+                  if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
+                    $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                    if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                      $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                    }
+                  } else {
+                    
                   }
                 }
-                if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
-                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
-                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
-                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
-                  }
-                } else {
-                  
-                }
+                
               }
               /*if($(`.message${data[i].username}`)[0]) {
                 $(`.message${data[i].username}`).each(function() {
@@ -1913,7 +1936,7 @@ $(document).ready(function () {
 
     $('.contenidomessagenofocus').each(function() {
       //console.log($(this).html());
-      console.log($(this).html());
+      //console.log($(this).html());
       if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:') || $(this).html().includes('&lt;img class="emoji"')) {
         $(this).html('<i class="far fa-clipboard"></i> Sticker.');
       }
@@ -1941,11 +1964,13 @@ $(document).ready(function () {
 
   function switchSheet() {
     let theme = document.getElementById("theme");
-  
+    let themeSwal = document.getElementById("theme-swal");
     if (theme.getAttribute("href") == "/css/theme-dark.css") {
       theme.href = "/css/theme-light.css";
+      themeSwal.href = "/css/swal-light.css";
     } else {
       theme.href = "/css/theme-dark.css";
+      themeSwal.href = "/css/swal-dark.css";
     }
   }
 
@@ -2014,12 +2039,29 @@ $(document).ready(function () {
   
       $(this).off('click').on('click', function(e) {
         var target = e.target;
-        console.log(target);
+       
         if (target.nodeName.toLowerCase() == 'img') {
           console.log('xd2');
             var $messageInput = $(this).parent().find('.textMessage');
             $messageInput.focus();
-            $messageInput.val($messageInput.val() + '[emoji:' + target.title + ']');
+            var dateTime = moment().format("hh:mm a").toUpperCase();
+            let destino_user = "Todos";
+            $('.panel-message').each(function() {
+              if($(this).is(':visible')) {
+                destino_user = $(this).find('.container-destino').find('input').val();
+              }
+            });
+            //console.log(target);
+            let stick = '<img class="emoji" src="/img/emoji/' + target.title + '.gif" />';
+            socket.emit('sendMessage', {
+              username: sessionStorage.username,
+              nombre: sessionStorage.nombre,
+              message: stick,
+              date: dateTime,
+              foto: sessionStorage.foto || fotoDefault,
+              destino: destino_user
+          });
+            //$messageInput.val($messageInput.val() + '[emoji:' + target.title + ']');
         };
       });
     });
