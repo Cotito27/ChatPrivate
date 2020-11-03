@@ -271,7 +271,8 @@ hr {
 .btnenviar,
 .btnEnvio,
 .btnStickers,
-.btnAudio {
+.btnAudio,
+.btnEmojis {
   background: transparent;
   float: right;
   width: 30px;
@@ -298,7 +299,9 @@ hr {
 .btnStickers:focus,
 .btnStickers:hover,
 .btnAudio:focus,
-.btnAudio:hover {
+.btnAudio:hover,
+.btnEmojis:focus,
+.btnEmojis:hover {
   border: none !important;
   outline: none !important;
   background: transparent !important;
@@ -307,7 +310,8 @@ hr {
 }
 .btnEnvio:hover,
 .btnStickers:hover,
-.btnAudio:hover {
+.btnAudio:hover,
+.btnEmojis:hover {
   transform: scale(1.2);
 }
 
@@ -519,7 +523,8 @@ textarea {
   float: right;
 }
 .btnStickers,
-.btnAudio {
+.btnAudio,
+.btnEmojis {
   width: 35px;
 }
 .form-message {
@@ -712,6 +717,24 @@ input[type="file"]#file {
 }
 .iconEdit:hover {
   transform: scale(1.2);
+}
+.emoji:hover {
+  transform: scale(1.3);
+}
+.emoji-picker__emojis {
+  --emoji-per-row: 7;
+  grid-template-columns: repeat(--emoji-per-row, 1fr) !important;
+  width: 100% !important;
+}
+.emoji-picker__container {
+  --emoji-per-row: 7;
+  grid-template-columns: repeat(--emoji-per-row, 1fr) !important;
+}
+/*.emoji-picker__search-icon {
+  bottom: 10px;
+}*/
+.svg-inline--fa {
+  vertical-align: 0 !important;
 }
 
 @media only screen and (max-width: 550px) {

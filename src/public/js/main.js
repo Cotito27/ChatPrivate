@@ -45,10 +45,71 @@ $(document).ready(function () {
       $(".card-history").css("max-height", $(window).height() - 98 + "px");
     }
   }
+  
+function isMobile(){
+  return (
+      (navigator.userAgent.match(/Android/i)) ||
+      (navigator.userAgent.match(/webOS/i)) ||
+      (navigator.userAgent.match(/iPhone/i)) ||
+      (navigator.userAgent.match(/iPod/i)) ||
+      (navigator.userAgent.match(/iPad/i)) ||
+      (navigator.userAgent.match(/BlackBerry/i))
+  );
+}
+function addEmojiVisibleLight() {
+  var emojis1=document.querySelector('.emoji_01');
+  var input=document.getElementById("textMessage");
+  
+	var picker=new EmojiButton({
+    	style: 'twemoji',
+    	position: 'top-end',
+    	theme: 'light',
+      autoHide : false,
+      emojiVersion : 5.0, //1.0,2.0,3.0,4.0,5.0,11.0,12.0,12.1
+      emojiSize : "26px"
+	});
+	picker.on('emoji',function(emoji){
+		var valor=emoji.split('" src')[1];
+		input.value+=emoji.replace('<img class="emoji" draggable="false" alt="','').replace(valor,'').replace('" src','');
+	});
+  document.addEventListener('click', function(e) { 
+    if(e.target.classList.contains('fa-smile-o')) {
+      picker.pickerVisible?picker.hidePicker():picker.showPicker(e.target);
+    }
+  });
+}
+function addEmojiVisibleDark() {
+  var emojis1=document.querySelector('.btnEmojis');
+  var input=document.getElementById("textMessage");
+  
+	var picker=new EmojiButton({
+    	style: 'twemoji',
+    	position: 'top-end',
+    	theme: 'dark',
+      autoHide : false,
+      emojiVersion : 5.0, //1.0,2.0,3.0,4.0,5.0,11.0,12.0,12.1
+      emojiSize : "26px"
+	});
+	picker.on('emoji',function(emoji){
+		var valor=emoji.split('" src')[1];
+		input.value+=emoji.replace('<img class="emoji" draggable="false" alt="','').replace(valor,'').replace('" src','');
+  });
+  document.addEventListener('click', function(e) {
+    if(e.target.classList.contains('fa-smile-o')) {
+      picker.pickerVisible?picker.hidePicker():picker.showPicker(e.target);
+    }
+  });
+}
+if(!isMobile()) {
+  addEmojiVisibleLight();
+  console.log('Agregado');
+} else {
+  $('.btnEmojis').hide();
+}
   const fotoDefault = "/img/avatar-login3.png";
   sessionStorage.foto = fotoDefault;
   const fotoToastDefault = '/img/avatar-login4.png';
-  let destinoOrigin = $(".title-destino").html();
+  let destinoOrigin = $(".title-destino").text();
   let redirec = ["config", "history", "users", "message", "history"];
   function statusSelected() {
     if(!sessionStorage.selected) {
@@ -1392,8 +1453,8 @@ $(document).ready(function () {
         `;
     } else {
       $(`.messageschatnoti`).each(function() {
-        if($(this).find('.contenidochatmessages').find('.name-user-history').html() == data.destino) {
-          $(this).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').html(data.message);
+        if($(this).find('.contenidochatmessages').find('.name-user-history').text() == data.destino) {
+          $(this).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').text(data.message);
         }
       });
        /* html += `
@@ -1612,6 +1673,7 @@ $(document).ready(function () {
         <div class="focus-message">
         <div id="emojiWrapper" class="emojiWrapper"></div>
           <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo"></textarea>
+          <button class="btn btn-primary btnEmojis emoji_01"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
           <button class="btn btn-primary btnAudio" data-toggle="modal" data-target="#modalAudio"><i class="fas fa-microphone"></i></button>
           <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
         </div>
@@ -1968,9 +2030,11 @@ $(document).ready(function () {
     if (theme.getAttribute("href") == "/css/theme-dark.css") {
       theme.href = "/css/theme-light.css";
       themeSwal.href = "/css/swal-light.css";
+      addEmojiVisibleLight();
     } else {
       theme.href = "/css/theme-dark.css";
       themeSwal.href = "/css/swal-dark.css";
+      addEmojiVisibleDark();
     }
   }
 
