@@ -2122,6 +2122,13 @@ $(document).ready(function () {
   }
   detectarCambioApodo();
   $('.btnEnviarGrabacion').click(function() {
+    if(!$('.identAudio')[0] || $('.identAudio').is(':hidden')) {
+      (async() => {
+        //swal("Success!", "Se han guardado los cambios ", "success");
+        swal("Error!", "Le falta grabar audio o falta detener la grabación :(", "error");
+      })();
+       return;
+      }
     var dateTime = moment().format("hh:mm a").toUpperCase();
     let destino_user = "Todos";
     $('.panel-message').each(function() {
@@ -2140,6 +2147,9 @@ $(document).ready(function () {
         foto: sessionStorage.foto || fotoDefault,
         destino: destino_user
     });
+    $('.close').click();
+    $('.identAudio').prop('href', '');
+    $('.identAudio').hide();
   });
   let nickNameChange = [];
   function detectarCambioApodo() {

@@ -123,7 +123,8 @@ const init = () => {
                           // Aquí haz algo con la respuesta ;)
                           console.log("La respuesta: ", respuestaComoTexto);
                           // Abrir el archivo, es opcional y solo lo pongo como demostración
-                          $duracion.innerHTML = `<strong>Audio subido correctamente.</strong>&nbsp; <a target="_blank" class="identAudio" href="/upload/${respuestaComoTexto}">Abrir</a>`
+                          $duracion.innerHTML = `<strong>Audio subido correctamente.</strong>&nbsp; <a target="_blank" class="identAudio" href="/upload/${respuestaComoTexto}">Abrir</a>`;
+                          $('.identAudio').show();
                       })
               });
           })
