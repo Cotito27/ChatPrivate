@@ -7,6 +7,7 @@
 }*/
 
 //const { usersOnline } = require("../../variables");
+//import audio from './audio.js';
 
 /*if(sessionStorage.username) {
   if(!location.href.includes(sessionStorage.username)){
@@ -19,6 +20,7 @@
 }*/
 
 $(document).ready(function () {
+ 
   //alert(location.origin + " " +location.href);
   const socket = io();
   
@@ -808,6 +810,11 @@ $(document).ready(function () {
     socket.on("previousMessage", function (data) {
       var confirmador = false;
       data.message = _showEmoji(data.message);
+      if(data.message.includes('<video width="340" height="50" controls>') && data.message.includes('<source src="') && data.message.includes('" type="video/webm" />')) {
+        
+      } else {
+        
+      }
       if(data.destino == "Todos") {
         for(let i=0; i<nickNameChange.length; i++) {
           //console.log(nickNameChange[i]);
@@ -1387,8 +1394,8 @@ $(document).ready(function () {
         /*for (let i = 0; i < data.length; i++) {
           }*/
     }
-    
-    
+    verificarEmoji();
+    verificarAudio();
   }
   let finalStorage = JSON.parse(
     sessionStorage.getItem("message" + sessionStorage.codigo)
@@ -1441,6 +1448,14 @@ $(document).ready(function () {
                     $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
                   }
                 }
+                if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
+                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                  }
+                } else {
+                  
+                }
                 //$(`#mensaje${data[i].id}`).find('.contenidoimg').find('.imguser').attr('src',sessionStorage.foto);
               }
               /*if($(`.message${data[i].username}`)[0]) {
@@ -1464,6 +1479,14 @@ $(document).ready(function () {
                   if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
                     $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
                   }
+                }
+                if(data[i].message.includes('<video width="340" height="50" controls>') && data[i].message.includes('<source src="') && data[i].message.includes('" type="video/webm" />')) {
+                  $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
+                  if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
+                    $(`#mensaje${data[i].id}`).find('.othercontenidomessage').find('.res-message').html(data[i].message);
+                  }
+                } else {
+                  
                 }
               }
               /*if($(`.message${data[i].username}`)[0]) {
@@ -1566,6 +1589,7 @@ $(document).ready(function () {
         <div class="focus-message">
         <div id="emojiWrapper" class="emojiWrapper"></div>
           <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo"></textarea>
+          <button class="btn btn-primary btnAudio" data-toggle="modal" data-target="#modalAudio"><i class="fas fa-microphone"></i></button>
           <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
         </div>
         </div>
@@ -1619,8 +1643,9 @@ $(document).ready(function () {
       darColorFocus();
       //$('.textMessage').focus();
       verificarEmoji();
+      verificarAudio();
       eventsEmoji();
-      
+      //audio.init();
       backPanelMessages(true);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
@@ -1755,8 +1780,9 @@ $(document).ready(function () {
       darColorFocus();
       $('.textMessage').focus();
       verificarEmoji();
+      verificarAudio();
       eventsEmoji();
-      
+      //audio.init();
       backPanelMessages(false);
 
       //destinoOrigin = $(`#destinoM${iduser}`).html();
@@ -1882,6 +1908,7 @@ $(document).ready(function () {
      //eventsEmoji();
     }); */
     verificarEmoji();
+    verificarAudio();
   function verificarEmoji() {
 
     $('.contenidomessagenofocus').each(function() {
@@ -1891,13 +1918,24 @@ $(document).ready(function () {
       }
      });
   }
+  function verificarAudio() {
+
+    $('.contenidomessagenofocus').each(function() {
+      //console.log($(this).html());
+      if($(this).html().includes('&lt;video width="340" height="50" controls&gt;') || $(this).html().includes('<video width="340" height="50" controls>') || $(this).html().includes('<video') || $(this).html().includes('<source')) {
+        $(this).html('<i class="far fa-file-audio"></i> Audio.');
+      }
+      //console.log($(this).html());
+     });
+  }
   function focusMessage() {
     $(".textMessage").each(function() {   
       $(this).focus();
     });
     setTimeout(function() {
       bajarScroll();
-    },500); 
+    },500);
+    
   }
 
   function switchSheet() {
@@ -2083,6 +2121,26 @@ $(document).ready(function () {
     });
   }
   detectarCambioApodo();
+  $('.btnEnviarGrabacion').click(function() {
+    var dateTime = moment().format("hh:mm a").toUpperCase();
+    let destino_user = "Todos";
+    $('.panel-message').each(function() {
+      if($(this).is(':visible')) {
+        destino_user = $(this).find('.container-destino').find('input').val();
+      }
+    });
+    let URLaudio = $('.identAudio').prop('href');
+    socket.emit('sendMessage', {
+        username: sessionStorage.username,
+        nombre: sessionStorage.nombre,
+        message: `<video width="340" height="50" controls>
+        <source src="${URLaudio}" type="video/webm" />
+      </video>`,
+        date: dateTime,
+        foto: sessionStorage.foto || fotoDefault,
+        destino: destino_user
+    });
+  });
   let nickNameChange = [];
   function detectarCambioApodo() {
     
@@ -2165,9 +2223,12 @@ $(document).ready(function () {
     });
   }
   function bajarScroll() {
-    $(".card-message").each(function() {   
-      $(this).scrollTop($(this).prop("scrollHeight"));
-    });
+    setTimeout(function() {
+      $(".card-message").each(function() {   
+        $(this).scrollTop($(this).prop("scrollHeight"));
+      });
+    }, 200);
+    
     /*$(".card-message").scrollTop($(".card-message").prop("scrollHeight"));*/
     //console.log("bajando!!");
   }

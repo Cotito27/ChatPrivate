@@ -270,7 +270,8 @@ hr {
 }
 .btnenviar,
 .btnEnvio,
-.btnStickers {
+.btnStickers,
+.btnAudio {
   background: transparent;
   float: right;
   width: 30px;
@@ -295,7 +296,9 @@ hr {
 .btnEnvio:focus,
 .btnEnvio:hover,
 .btnStickers:focus,
-.btnStickers:hover {
+.btnStickers:hover,
+.btnAudio:focus,
+.btnAudio:hover {
   border: none !important;
   outline: none !important;
   background: transparent !important;
@@ -303,9 +306,11 @@ hr {
   color: black !important;
 }
 .btnEnvio:hover,
-.btnStickers:hover {
+.btnStickers:hover,
+.btnAudio:hover {
   transform: scale(1.2);
 }
+
 .elementssubmessage {
   border: 1px solid rgb(190, 190, 190);
   margin-left: 15px;
@@ -513,7 +518,8 @@ textarea {
   width: 45px;
   float: right;
 }
-.btnStickers {
+.btnStickers,
+.btnAudio {
   width: 35px;
 }
 .form-message {
@@ -739,5 +745,8 @@ input[type="file"]#file {
   .card-history {
     height: calc(100vh - 62px);
     max-height: calc(100vh - 62px);
+  }
+  video {
+    width: 100% !important;
   }
 }
