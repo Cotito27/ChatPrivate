@@ -738,6 +738,9 @@ input[type="file"]#file {
 .svg-inline--fa {
   vertical-align: 0 !important;
 }
+.userLink {
+  color: #039be5 !important;
+}
 
 @media only screen and (max-width: 550px) {
   .container {

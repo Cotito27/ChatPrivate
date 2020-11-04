@@ -759,10 +759,10 @@ if(!isMobile()) {
       //console.log(isUrl(element), element);
       console.log(element.substr(element.length-4, element.length-1));
       if(element.substr(element.length-4, element.length-1) == '.com' || element.substr(element.length-7, element.length-1) == '.com.pe') {
-        almacenador+=` <a target="_blank" href="https://${element}">${element}</a>`
+        almacenador+=` <a target="_blank" class="userLink" href="https://${element}">${element}</a>`
       } else {
         if(isUrl(element)) {
-          almacenador+=` <a target="_blank" href="${element}">${element}</a>`
+          almacenador+=` <a target="_blank" class="userLink" href="${element}">${element}</a>`
         } else {
           almacenador+=" "+element;
         }
