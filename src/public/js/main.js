@@ -820,7 +820,9 @@ if(!isMobile()) {
     });
     $('.textMessage').off('keyup').on('keyup', function() {
       if($(this).val().includes('.com') || $(this).val().includes('.com.pe') || $(this).val().includes('https://') || $(this).val().includes('http://')) {
-        $(this).val($(this).val().replace('\n','').replace('\t',''));
+        if($(this).val().includes('\n') || $(this).val().includes('\t')) {
+          $(this).val($(this).val().replace('\n','').replace('\t',''));
+        }
       }
     });
     /*$(".textMessage").keypress(function (e) {  
