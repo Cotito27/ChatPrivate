@@ -753,6 +753,25 @@ if(!isMobile()) {
     
     var dateTime = moment().format("hh:mm a").toUpperCase();
     message = message.replace(/[<]+/g,'_').replace(/[>]+/g,'_');
+    let vecUrl = message.split(' ');
+    let almacenador = "";
+    vecUrl.forEach(element => {
+      //console.log(isUrl(element), element);
+      console.log(element.substr(element.length-4, element.length-1));
+      if(element.substr(element.length-4, element.length-1) == '.com' || element.substr(element.length-7, element.length-1) == '.com.pe') {
+        almacenador+=` <a target="_blank" href="https://${element}">${element}</a>`
+      } else {
+        if(isUrl(element)) {
+          almacenador+=` <a target="_blank" href="${element}">${element}</a>`
+        } else {
+          almacenador+=" "+element;
+        }
+      }
+      
+    });
+    if(vecUrl.length) {
+      message = almacenador.trim();
+    }
     if (fotoUser == undefined || fotoUser == null || fotoUser == "") {
       socket.emit("sendMessage", {
         username: user,
@@ -775,7 +794,7 @@ if(!isMobile()) {
     $(".textMessage").val("");
     $(".textMessage").focus();
   }
-  
+ 
   function addEventsMessage() {
     /*$(".textMessage").off('keypress',function(e){});
     $(".btnenvio").off('click',function(){});*/
@@ -798,6 +817,11 @@ if(!isMobile()) {
         }
       }
 
+    });
+    $('.textMessage').off('keyup').on('keyup', function() {
+      if($(this).val().includes('.com') || $(this).val().includes('.com.pe') || $(this).val().includes('https://') || $(this).val().includes('http://')) {
+        $(this).val($(this).val().replace('\n','').replace('\t',''));
+      }
     });
     /*$(".textMessage").keypress(function (e) {  
       if (e.keyCode == 13) {
@@ -858,6 +882,34 @@ if(!isMobile()) {
         });
       }
   }
+  function isUrl(s) {   
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(s);
+}
+  function isValidUrl(url,obligatory,ftp)
+{
+    // Si no se especifica el paramatro "obligatory", interpretamos
+    // que no es obligatorio
+    if(obligatory==undefined)
+        obligatory=0;
+    // Si no se especifica el parametro "ftp", interpretamos que la
+    // direccion no puede ser una direccion a un servidor ftp
+    if(ftp==undefined)
+        ftp=0;
+ 
+    if(url=="" && obligatory==0)
+        return true;
+ 
+    if(ftp)
+        var pattern = /^(http|https|ftp)\:\/\/[a-z0-9\.-]+\.[a-z]{2,4}/gi;
+    else
+        var pattern = /^(http|https)\:\/\/[a-z0-9\.-]+\.[a-z]{2,4}/gi;
+ 
+    if(url.match(pattern))
+        return true;
+    else
+        return false;
+}
   let userOrigin;
   function verificarFocusHistory() {
     socket.on('focusHistory', function() {
@@ -878,6 +930,7 @@ if(!isMobile()) {
       } else {
         
       }
+      
       
       if(data.destino == "Todos") {
         for(let i=0; i<nickNameChange.length; i++) {
@@ -1227,6 +1280,7 @@ if(!isMobile()) {
         username: data.username,
         foto: data.foto
       });
+      verificarLink();
       verificarEmoji();
       verificarAudio();
     });
@@ -1520,7 +1574,10 @@ if(!isMobile()) {
                 data[i].message = _showEmoji(data[i].message);
                 
                 if(JSON.stringify(data[i].message) != '{}'){
-                  console.log('xd21');
+                  //console.log('xd21');
+                  if(data[i].message.includes('<a target="_blank"')) {
+                    $(`#mensaje${data[i].id}`).find('.res-message').html(data[i].message);
+                  }
                   if(data[i].message.includes('<img class="emoji"')) {
                     $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
                     if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
@@ -1556,6 +1613,9 @@ if(!isMobile()) {
                 data[i].message = _showEmoji(data[i].message);
                
                 if(JSON.stringify(data[i].message) != '{}'){
+                  if(data[i].message.includes('<a target="_blank"')) {
+                    $(`#mensaje${data[i].id}`).find('.res-message').html(data[i].message);
+                  }
                   if(data[i].message.includes('<img class="emoji"')) {
                     $(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html(data[i].message);
                     if($(`#mensaje${data[i].id}`).find('.mycontenidomessage').find('.res-message').html() == undefined) {
@@ -1727,6 +1787,7 @@ if(!isMobile()) {
       }
       darColorFocus();
       //$('.textMessage').focus();
+      verificarLink();
       verificarEmoji();
       verificarAudio();
       eventsEmoji();
@@ -1864,6 +1925,7 @@ if(!isMobile()) {
       $('.components-message').append(html);
       darColorFocus();
       $('.textMessage').focus();
+      verificarLink();
       verificarEmoji();
       verificarAudio();
       eventsEmoji();
@@ -1992,6 +2054,7 @@ if(!isMobile()) {
      
      //eventsEmoji();
     }); */
+    verificarLink();
     verificarEmoji();
     verificarAudio();
   function verificarEmoji() {
@@ -2001,6 +2064,16 @@ if(!isMobile()) {
       //console.log($(this).html());
       if($(this).html().includes('<img class="emoji"') || $(this).html().includes('[emoji:') || $(this).html().includes('&lt;img class="emoji"')) {
         $(this).html('<i class="far fa-clipboard"></i> Sticker.');
+      }
+     });
+  }
+  function verificarLink() {
+
+    $('.contenidomessagenofocus').each(function() {
+      //console.log($(this).html());
+      //console.log($(this).html());
+      if($(this).html().includes('<a target="_blank"') || $(this).html().includes('&lt;a target="_blank"')) {
+        $(this).html($(this).text());
       }
      });
   }

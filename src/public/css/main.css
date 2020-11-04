@@ -230,7 +230,8 @@ img {
   border: 1px solid rgb(190, 190, 190);
 }
 
-.contenidomessagenofocus {
+.contenidomessagenofocus,
+.contenidochatmessages {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -660,7 +661,8 @@ input[type="file"]#imagefile::before {
   height: 80%;
   width: 17%;
 }
-.othercontenidomessage {
+.othercontenidomessage,
+.mycontenidomessage {
   word-break: break-word;
 }
 input[type="file"]#file {
