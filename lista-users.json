@@ -12,7 +12,7 @@
       "user": "admin",
       "password": "123",
       "nombres": "jesus",
-      "nameFoto": "/img/avatar-login3.png"
+      "nameFoto": "0s2aqeq.jpg"
     },
     {
       "id": 3,
@@ -45,6 +45,13 @@
     {
       "id": 7,
       "user": "prueba@gmail.com",
+      "password": "123",
+      "nombres": "<h1>prueba</h1>",
+      "nameFoto": "/img/avatar-login3.png"
+    },
+    {
+      "id": 8,
+      "user": "prueba2@gmail.com",
       "password": "123",
       "nombres": "<h1>prueba</h1>",
       "nameFoto": "/img/avatar-login3.png"

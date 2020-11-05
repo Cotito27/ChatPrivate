@@ -84,7 +84,7 @@ ctrl.index = async (req, res) => {
         
       }
     })
-  })
+  });
   //let rr = false;
   audiosInitial.forEach((audI) => {
     if(!veriCheck[audI]) {

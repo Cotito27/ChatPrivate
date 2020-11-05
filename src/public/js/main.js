@@ -249,17 +249,46 @@ if(!isMobile()) {
 
   $(".btnmessage").click(function () {
     //location.href = 'page-message';
+    
     if($('#content-message').hasClass('selectedItem')) {
       $('.row').hide();
       $('#content-message').show();
       sessionStorage.selected = "message";
       actualizarSelectMenu();
+      let responsePanel;
+      $('.panel-message').each(function() {
+        
+        if($(this).parent().parent().is(':visible') && $(this).is(':visible')) {
+          responsePanel = $(this).prop('id').replace('panelM','');
+        }
+      });
+      if(responsePanel == '') {
+        $(`#userhistory-1`).click();
+      }
+      if($(`#userhistory${responsePanel}`)[0]) {
+        $(`#userhistory${responsePanel}`).click();
+      }
       return;
     } else if($('#content-history').hasClass('selectedItem')) {
       $('.row').hide();
       $('#content-history').show();
       sessionStorage.selected = "history";
       actualizarSelectMenu();
+      let responsePanel;
+      $('.panel-message').each(function() {
+        
+        if($(this).parent().parent().is(':visible') && $(this).is(':visible')) {
+          responsePanel = $(this).prop('id').replace('panelM','');
+        }
+        
+      });
+      if(responsePanel == '') {
+        $(`#userhistory-1`).click();
+      }
+      if($(`#userhistory${responsePanel}`)[0]) {
+        $(`#userhistory${responsePanel}`).click();
+      }
+      
       return;
     }
     for (let i = 0; i < redirec.length; i++) {
@@ -272,6 +301,20 @@ if(!isMobile()) {
       }
     }
     actualizarSelectMenu();
+    let responsePanel;
+    $('.panel-message').each(function() {
+      
+      if($(this).parent().parent().is(':visible') && $(this).is(':visible')) {
+        responsePanel = $(this).prop('id').replace('panelM','');
+      }
+    });
+    if(responsePanel == '') {
+      $(`#userhistory-1`).click();
+    }
+    if($(`#userhistory${responsePanel}`)[0]) {
+      $(`#userhistory${responsePanel}`).click();
+    }
+    
     bajarScroll();
   });
   function actualizarSelectMenu() {
@@ -742,6 +785,12 @@ if(!isMobile()) {
   }
   
   actualizarUsers();
+  if(location.href.includes('/page-register')) {
+    if(sessionStorage.username) {
+      location.href = location.origin;
+    }
+  }
+  
   function enviarMensaje(user, message, fotoUser) {
     let destino_user = "Todos";
     $('.panel-message').each(function() {
@@ -757,7 +806,7 @@ if(!isMobile()) {
     let almacenador = "";
     vecUrl.forEach(element => {
       //console.log(isUrl(element), element);
-      console.log(element.substr(element.length-4, element.length-1));
+      //console.log(element.substr(element.length-4, element.length-1));
       if(element.substr(element.length-4, element.length-1) == '.com' || element.substr(element.length-7, element.length-1) == '.com.pe') {
         almacenador+=` <a target="_blank" class="userLink" href="https://${element}">${element}</a>`
       } else {
@@ -920,6 +969,13 @@ if(!isMobile()) {
     });
   }
   verificarFocusHistory();
+  function verificarFocusAll() {
+    socket.on('focusAll', function() {
+      $(`#userhistory-1`).click();
+      $(".btnmessage").click();
+    });
+  }
+  verificarFocusAll();
   let varHistoryAll = 0;
   function obtenerMensajes() {
     socket.on("previousMessage", function (data) {
@@ -1167,7 +1223,7 @@ if(!isMobile()) {
               
               $(this).addClass('newMessage');
               let $msgNewNumber = $(this).find('.contenidochatmessages').find('.messagenofocus').find('.myNumberNoti');
-              console.log($msgNewNumber.text());
+              //console.log($msgNewNumber.text());
               //console.log(numberUnic);
               if(numberNoti<=0){
                 numberNoti+=varHistoryAll;
@@ -1189,7 +1245,7 @@ if(!isMobile()) {
                 //$('.myNumberNoti').text(numberUnic);
               }
               
-              console.log(varHistoryAll);
+              //console.log(varHistoryAll);
               historyNumber = data.id;
             });
             
@@ -1238,11 +1294,21 @@ if(!isMobile()) {
             }
           }
         }
-        console.log(`${data.username}${data.destino}`, codAux, codPri);
+        //console.log(`${data.username}${data.destino}`, codAux, codPri);
         $('.mensajeOtherNoti').each(function() {
           $(this).click(function() {
-            socket.emit('focusHistory');
-            $(".btnmessage").click();
+            //socket.emit('focusHistory');
+            
+              //console.log(data.destino, sessionStorage.username);
+              if($(`#userhistory${data.destino}${data.username}`)[0]) {
+                //console.log(`#userhistory${data.destino}${data.username}`);
+                $(`#userhistory${data.destino}${data.username}`).click();
+                $(".btnmessage").click();
+                return;
+              }
+              socket.emit('focusAll');
+              
+            
               /*$('.row').hide();
               $('#content-history').show();*/
             
@@ -1250,7 +1316,7 @@ if(!isMobile()) {
         });
         //console.log($(`#panelM`).is(':hidden'));
         //$(`#userhistory${codPri}`).find('.contenidochatmessages').find('.name-user-history').text(data.nombre);
-        console.log(data.username, data.destino);
+        //console.log(data.username, data.destino);
         if(data.destino != "Todos" && (data.destino == data.username || data.destino == sessionStorage.username)) {
           if(data.message.includes('<img class="emoji"')) {
             $(`#userhistory${data.destino}${data.username}`).find('.contenidochatmessages').find('.messagenofocus').find('.contenidomessagenofocus').html('<i class="far fa-clipboard"></i> Sticker.');
@@ -1448,7 +1514,7 @@ if(!isMobile()) {
     $('.loader-page').show();
     var form = $('#uploader')[0];
     var formData = new FormData(form);
-    console.log(`${location.origin}/images`);
+    //console.log(`${location.origin}/images`);
     /*setTimeout(function() {
       if(timer <= 0) {
         
@@ -1734,7 +1800,7 @@ if(!isMobile()) {
         <div class="form-group form-message">
         <div class="focus-message">
         <div id="emojiWrapper" class="emojiWrapper"></div>
-          <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo"></textarea>
+          <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo" maxlength="3000"></textarea>
           <button class="btn btn-primary btnEmojis emoji_01"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
           <button class="btn btn-primary btnAudio" data-toggle="modal" data-target="#modalAudio"><i class="fas fa-microphone"></i></button>
           <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
