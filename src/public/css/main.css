@@ -728,6 +728,14 @@ input[type="file"]#file {
   grid-template-columns: repeat(--emoji-per-row, 1fr) !important;
   width: 100% !important;
 }
+.movilEmojis {
+  padding: 0px !important;
+  width: 100%;
+  max-width: 100% !important;
+  max-height: 250px !important;
+  bottom: -250px !important;
+  display: inline-block !important;
+}
 .emoji-picker__container {
   --emoji-per-row: 7;
   grid-template-columns: repeat(--emoji-per-row, 1fr) !important;
@@ -776,5 +784,13 @@ input[type="file"]#file {
   }
   video {
     width: 100% !important;
+  }
+
+  #emojiWrapper img {
+    border-radius: 0;
+    width: 20%;
+    height: 83px;
+    margin: 0;
+    padding: 5px;
   }
 }

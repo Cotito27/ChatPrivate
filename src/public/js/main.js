@@ -23,9 +23,15 @@ $(document).ready(function () {
  
   //alert(location.origin + " " +location.href);
   const socket = io();
-  
+  sessionStorage.userconnect="connect";
+  sessionStorage.userdisconnect="disconnect";
   function resizePage() {
+    
     if ($(window).width() <= 550) {
+      if($('#emojiWrapper').hasClass('movilEmojis')) {
+        $(".card-message").css("height", $(window).height() - 452 + "px");
+        return;
+      }
       $(".card-message").css("height", $(window).height() - 202 + "px");
       $(".card-message").css("max-height", $(window).height() - 202 + "px");
       $(".card-users").css("height", $(window).height() - 127 + "px");
@@ -759,17 +765,19 @@ if(!isMobile()) {
         }
         //contadoruserlast++;
         //console.log(fotoLastUser);
-        if($('.toast')[0]){
-        if(!$('.toast').html().includes(`<strong>${replaceuser}</strong> se ha unido al chat.`)){
-          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`); 
-          replaceuser=userlast.toUpperCase();
-          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
-        }
-        }else{
-          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`);
-          replaceuser=userlast.toUpperCase();
-          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
-        }
+        if(sessionStorage.userconnect=="connect"){
+          if($('.toast')[0]){
+          if(!$('.toast').html().includes(`<strong>${replaceuser}</strong> se ha unido al chat.`)){
+            Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`); 
+            replaceuser=userlast.toUpperCase();
+            $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
+          }
+          }else{
+            Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> se ha unido al chat.`);
+            replaceuser=userlast.toUpperCase();
+            $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
+          }
+      }
       }
       $(".users-history").html(html);
       userOrigin = data;
@@ -1423,6 +1431,7 @@ if(!isMobile()) {
     }
   }
   obtenerMensajes();
+  
   function userDisconnect() {
     /*socket.on("disconnect", function () {
       sessionStorage.username = "";
@@ -1445,16 +1454,18 @@ if(!isMobile()) {
       });
       //let fotoLastUser = user.foto;
       //console.log(userlast);
-      if($('.toast')[0]){
-        if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
-        Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
-        replaceuser2=userlast.toUpperCase();
-        $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
-      }
-      }else{
-        Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
-        replaceuser2=userlast.toUpperCase(); 
-        $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
+      if(sessionStorage.userdisconnect=="disconnect"){
+        if($('.toast')[0]){
+          if(!$('.toast').html().includes(`<strong>${replaceuser2}</strong> ha abandonado el chat.`)){
+          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
+          replaceuser2=userlast.toUpperCase();
+          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
+        }
+        }else{
+          Command: toastr["info"](`&nbsp;<strong>${userlast.toUpperCase()}</strong> ha abandonado el chat.`);
+          replaceuser2=userlast.toUpperCase(); 
+          $('.toast-info:last').css('background-image', `url("${fotoLastUser || fotoToastDefault}")`);
+        }
       }
     });
   }
@@ -1529,10 +1540,26 @@ if(!isMobile()) {
       swal("Success!", "Se han guardado exitosamente los cambios!", "success");
     })();
   });*/
+  function verificarNotiConnect() {
+    if($('#defaultCheck2').prop('checked')){
+      sessionStorage.userconnect="connect";
+      }else{
+        sessionStorage.userconnect="noconnect";
+      }
+  }
+  function verificarNotiDisconnect() {
+    if($('#defaultCheck3').prop('checked')){
+      sessionStorage.userdisconnect="disconnect";
+    }else{
+        sessionStorage.userdisconnect="nodisconnect";
+    }
+  }
   $('#uploader').on('submit', function(event) {
     event.preventDefault();
     //console.log($('#imgUserConfig').prop('src'), sessionStorage.foto);
     verificarSonido();
+    verificarNotiConnect();
+    verificarNotiDisconnect();
     if($('#imgUserConfig').prop('src').includes(sessionStorage.foto)) {
       (async() => {
         swal("Success!", "Se han guardado exitosamente los cambios!", "success");
@@ -1828,7 +1855,7 @@ if(!isMobile()) {
     <div class="card-footer">
         <div class="form-group form-message">
         <div class="focus-message">
-        <div id="emojiWrapper" class="emojiWrapper"></div>
+        
           <textarea class="form-control textMessage" id="textMessage" class="textMessage" placeholder="Escriba algo" maxlength="3000"></textarea>
           <button class="btn btn-primary btnEmojis emoji_01"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
           <button class="btn btn-primary btnAudio" data-toggle="modal" data-target="#modalAudio"><i class="fas fa-microphone"></i></button>
@@ -1836,6 +1863,7 @@ if(!isMobile()) {
         </div>
         </div>
       </div>
+      <div id="emojiWrapper" class="emojiWrapper"></div>
       </div>`;
       return html;
   }
@@ -2234,22 +2262,38 @@ if(!isMobile()) {
     _initialEmoji();
     document.body.addEventListener('click', function(e) {
       var $emojiwrapper = $('.emojiWrapper');
-        if ($(e.target) != $emojiwrapper) {
-          $emojiwrapper.css('display','none');
-      };
-      
+  
+          if ($(e.target) != $emojiwrapper && !e.target.classList.contains('img-gif')) {
+            $emojiwrapper.css('display','none');
+            $emojiwrapper.removeClass('movilEmojis');
+            resizePage();
+          }
       
   });
 
     $('.btnStickers').off('click').on('click', function(e) {
-      console.log('xd');
+      //console.log('xd');
       
       var $emojiwrapper = $('.emojiWrapper');
       //console.log($emojiwrapper.css('display'));
-      if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display')) {
-        $emojiwrapper.css('display', 'grid');
+      if($(window).width() <= 550) {
+      if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display') || !$emojiwrapper.hasClass('movilEmojis')) {
+          $emojiwrapper.addClass('movilEmojis');
+          resizePage();
+        } else {
+          $emojiwrapper.css('display', 'none');
+          $emojiwrapper.removeClass('movilEmojis');
+          resizePage();
+        }
+        
       } else {
-        $emojiwrapper.css('display', 'none');
+        if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display')) {
+          $emojiwrapper.css('display', 'grid');
+        } else {
+          $emojiwrapper.css('display', 'none');
+          $emojiwrapper.removeClass('movilEmojis');
+        }
+        
       }
       
       e.stopPropagation();
@@ -2275,9 +2319,9 @@ if(!isMobile()) {
         var target = e.target;
        
         if (target.nodeName.toLowerCase() == 'img') {
-          console.log('xd2');
+          //console.log('xd2');
             var $messageInput = $(this).parent().find('.textMessage');
-            $messageInput.focus();
+            //$messageInput.focus();
             var dateTime = moment().format("hh:mm a").toUpperCase();
             let destino_user = "Todos";
             $('.panel-message').each(function() {
