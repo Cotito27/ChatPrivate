@@ -243,6 +243,12 @@ if(!isMobile()) {
     $(element).addClass("selectedOption");
   }
   $(".btnmessage,.btnusers,.btnconfig").click(function () {
+    if(!$(this).prop('class').includes('btnconfig')) {
+      if(!$('#imgUserConfig').prop('src').includes(sessionStorage.foto)) {
+        $('#imgUserConfig').prop('src', sessionStorage.foto);
+        $('#file-foto').val(null);
+      }
+    }
     changeBackground(this);
     changeColor($(this).find(".iconmessage,.iconusers,.iconconfig"));
   });
@@ -1453,6 +1459,12 @@ if(!isMobile()) {
     });
   }
   userDisconnect();
+  function renderImage(formData) {
+    let $image = document.querySelector('#imgUserConfig');
+    const file = formData.get('imageUser');
+    const image = URL.createObjectURL(file);
+    $image.setAttribute('src', image);
+  }
   async function changeFoto(e, imgFoto) {
     let reader = new FileReader();
 
@@ -1464,7 +1476,7 @@ if(!isMobile()) {
       let image = document.createElement("img");
       image.src = reader.result;
       if (/\.(jpeg|jpg|png|gif)$/i.test(e.target.files[0].name)) {
-        imgFoto.src = await image.src;
+        imgFoto.src = await URL.createObjectURL(image.src);
       } else {
         alert("El archivo debe ser una imagen");
       }
@@ -1474,10 +1486,19 @@ if(!isMobile()) {
     let imgFoto = document.querySelector(".imgRegister");
     changeFoto(e, imgFoto);
   };*/
-  document.getElementById("file-foto").onchange = function (e) {
+  const $file = document.querySelector('#file-foto');
+  $file.addEventListener('change', (event) => {
+    const $form = document.querySelector('#uploader');
+    const formData = new FormData($form)
+    renderImage(formData);
+  })
+  /*document.getElementById("file-foto").onchange = function (e) {
     let imgFoto = document.querySelector("#imgUserConfig");
-    changeFoto(e, imgFoto);
-  };
+    //changeFoto(e, imgFoto);
+    const $form = document.querySelector('#uploader');
+    const formData = new FormData($form);
+    renderImage(formData);
+  };*/
   $("#eliminarFoto").click(function () {
     $("#imgUserConfig").attr("src", fotoDefault);
   });
@@ -1510,6 +1531,14 @@ if(!isMobile()) {
   });*/
   $('#uploader').on('submit', function(event) {
     event.preventDefault();
+    //console.log($('#imgUserConfig').prop('src'), sessionStorage.foto);
+    verificarSonido();
+    if($('#imgUserConfig').prop('src').includes(sessionStorage.foto)) {
+      (async() => {
+        swal("Success!", "Se han guardado exitosamente los cambios!", "success");
+      })();
+      return;
+    }
     let timer = 0;
     $('.loader-page').show();
     var form = $('#uploader')[0];
