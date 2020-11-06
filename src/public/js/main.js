@@ -2312,7 +2312,7 @@ if(!isMobile()) {
               if($(this).scrollTop()+this.offsetHeight == $(this).prop('scrollHeight') || $(this).scrollTop()+this.offsetHeight+15 >= $(this).prop('scrollHeight')) {
                 responseCard = this;
               }
-              alert($(this).scrollTop()+this.offsetHeight, $(this).prop('scrollHeight'));
+              //alert($(this).scrollTop()+this.offsetHeight, $(this).prop('scrollHeight'));
             }
           });
 
