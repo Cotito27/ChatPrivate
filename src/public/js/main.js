@@ -6,6 +6,8 @@
   location.href = location.origin;
 }*/
 
+//const { response } = require("express");
+
 //const { usersOnline } = require("../../variables");
 //import audio from './audio.js';
 
@@ -28,9 +30,15 @@ $(document).ready(function () {
   function resizePage() {
     
     if ($(window).width() <= 550) {
+      /*if(isMobile()) {
+        if($('#emojiWrapper').hasClass('movilEmojis')) {
+          $(".card-message").css("height", $(window).height() - 452 + "px");
+          return;
+        }
+      }*/
       if($('#emojiWrapper').hasClass('movilEmojis')) {
-        $(".card-message").css("height", $(window).height() - 452 + "px");
-        return;
+        $(".card-message").css("height", $(window).height() - 501 + "px");
+          return;
       }
       $(".card-message").css("height", $(window).height() - 202 + "px");
       $(".card-message").css("max-height", $(window).height() - 202 + "px");
@@ -41,6 +49,10 @@ $(document).ready(function () {
       $(".card-history").css("height", $(window).height() - 62 + "px");
       $(".card-history").css("max-height", $(window).height() - 62 + "px");
     } else {
+      if($('#emojiWrapper').hasClass('movilEmojis')) {
+        $(".card-message").css("height", $(window).height() - 538 + "px");
+          return;
+      }
       $(".card-message").css("height", $(window).height() - 238 + "px");
       $(".card-message").css("max-height", $(window).height() - 238 + "px");
       $(".card-users").css("height", $(window).height() - 163 + "px");
@@ -108,7 +120,6 @@ function addEmojiVisibleDark() {
 }
 if(!isMobile()) {
   addEmojiVisibleLight();
-  console.log('Agregado');
 } else {
   $('.btnEmojis').hide();
 }
@@ -1840,8 +1851,9 @@ if(!isMobile()) {
   }
   let idselectuser;
   function cambiarDestino(identuser, idAdd, destino, data) {
+    
     let html;
-    html = `
+      html = `
     <div class="card panel-message" id="panelM${sessionStorage.username}${destino}" style="display:none;">
     <div class="container-destino">
     <i class="fas fa-chevron-left btn-prepanel"></i> <label class="title-destino" id="destinoM${sessionStorage.username}${destino}">${identuser}
@@ -1852,6 +1864,9 @@ if(!isMobile()) {
     <div class="container-message" id="${sessionStorage.username}${destino}">
     </div>
     </div>
+    <div class="spaceStickers">
+        <div id="emojiWrapper" class="emojiWrapper"></div>
+      </div>
     <div class="card-footer">
         <div class="form-group form-message">
         <div class="focus-message">
@@ -1862,9 +1877,12 @@ if(!isMobile()) {
           <button class="btn btn-primary btnStickers"><i class="far fa-sticky-note"></i></button><button class="btn btn-primary btnEnvio"><i class="far fa-paper-plane"></i></button>
         </div>
         </div>
+        
       </div>
-      <div id="emojiWrapper" class="emojiWrapper"></div>
-      </div>`;
+      
+      </div>
+      `;
+    
       return html;
   }
   let numberNoti = 0;
@@ -2276,7 +2294,7 @@ if(!isMobile()) {
       
       var $emojiwrapper = $('.emojiWrapper');
       //console.log($emojiwrapper.css('display'));
-      if($(window).width() <= 550) {
+      /*if($(window).width() <= 550) {
       if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display') || !$emojiwrapper.hasClass('movilEmojis')) {
           $emojiwrapper.addClass('movilEmojis');
           resizePage();
@@ -2286,15 +2304,33 @@ if(!isMobile()) {
           resizePage();
         }
         
-      } else {
+      } else {*/
         if($emojiwrapper.css('display') == 'none' || !$emojiwrapper.css('display')) {
-          $emojiwrapper.css('display', 'grid');
+          let responseCard = "";
+          $(".card-message").each(function() {
+            if($(this).is(':visible') && $(this).parent().is(':visible') && $(this).parent().parent().parent().is(':visible')) {
+              if($(this).scrollTop()+this.offsetHeight == $(this).prop('scrollHeight')) {
+                responseCard = this;
+              }
+            }
+          });
+
+          $emojiwrapper.css('display', 'flex');
+          $emojiwrapper.addClass('movilEmojis');
+          resizePage();
+          if(responseCard != "") {
+            $(responseCard).each(function() {   
+              $(this).scrollTop($(this).prop("scrollHeight"));
+            });
+          }
+          
         } else {
           $emojiwrapper.css('display', 'none');
           $emojiwrapper.removeClass('movilEmojis');
+          resizePage();
         }
         
-      }
+      //}
       
       e.stopPropagation();
     });
