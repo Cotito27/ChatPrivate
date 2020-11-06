@@ -2141,9 +2141,24 @@ if(!isMobile()) {
     //bajarScroll();
     $(".btnmessage").click();
   }
-  $(".textMessage").focus(function() {
+  $("body").on("focus", ".textMessage",function() {
     setTimeout(function() {
-      bajarScroll();
+      let responseCard = "";
+          $(".card-message").each(function() {
+            if($(this).is(':visible') && $(this).parent().is(':visible') && $(this).parent().parent().parent().is(':visible')) {
+              if($(this).scrollTop()+this.offsetHeight == $(this).prop('scrollHeight') || $(this).scrollTop()+this.offsetHeight+15 >= $(this).prop('scrollHeight')) {
+                responseCard = this;
+              }
+              //alert($(this).scrollTop()+this.offsetHeight, $(this).prop('scrollHeight'));
+            }
+          });
+          if(responseCard != "") {
+            $(responseCard).each(function() {   
+              $(this).scrollTop($(this).prop("scrollHeight"));
+              //console.log('Bajado Ok');
+            });
+          }
+      //bajarScroll();
     },500); 
   });
   function darColorFocus() {
