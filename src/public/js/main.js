@@ -2159,7 +2159,7 @@ if(!isMobile()) {
             });
           }
       //bajarScroll();
-    },500); 
+    },0); 
   });
   function darColorFocus() {
     $(".textMessage").each(function() {   
