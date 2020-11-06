@@ -2142,7 +2142,7 @@ if(!isMobile()) {
     $(".btnmessage").click();
   }
   $("body").on("focus", ".textMessage",function() {
-    setTimeout(function() {
+    /*setTimeout(function() {
       let responseCard = "";
           $(".card-message").each(function() {
             if($(this).is(':visible') && $(this).parent().is(':visible') && $(this).parent().parent().parent().is(':visible')) {
@@ -2159,7 +2159,12 @@ if(!isMobile()) {
             });
           }
       //bajarScroll();
-    },0); 
+    },0); */
+    if(isMobile()) {
+      setTimeout(function() {
+        bajarScroll();
+      },500);
+    }
   });
   function darColorFocus() {
     $(".textMessage").each(function() {   
