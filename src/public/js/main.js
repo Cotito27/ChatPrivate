@@ -37,7 +37,7 @@ $(document).ready(function () {
         }
       }*/
       if($('#emojiWrapper').hasClass('movilEmojis')) {
-        $(".card-message").css("height", $(window).height() - 501 + "px");
+        $(".card-message").css("height", $(window).height() - 451 + "px");
           return;
       }
       $(".card-message").css("height", $(window).height() - 202 + "px");
@@ -50,7 +50,7 @@ $(document).ready(function () {
       $(".card-history").css("max-height", $(window).height() - 62 + "px");
     } else {
       if($('#emojiWrapper').hasClass('movilEmojis')) {
-        $(".card-message").css("height", $(window).height() - 538 + "px");
+        $(".card-message").css("height", $(window).height() - 488 + "px");
           return;
       }
       $(".card-message").css("height", $(window).height() - 238 + "px");
