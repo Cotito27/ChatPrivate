@@ -815,7 +815,8 @@ if(!isMobile()) {
       location.href = location.origin;
     }
   }
-  
+  let classThis;
+  let compThis;
   function enviarMensaje(user, message, fotoUser) {
     let destino_user = "Todos";
     $('.panel-message').each(function() {
@@ -998,6 +999,7 @@ if(!isMobile()) {
     socket.on('focusAll', function() {
       $(`#userhistory-1`).click();
       $(".btnmessage").click();
+      $(`.${compThis}`).parent().parent().remove();
     });
   }
   verificarFocusAll();
@@ -1279,7 +1281,7 @@ if(!isMobile()) {
                 addSound();
               }
             }
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti toast${data.username}${data.destino}"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
             //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
@@ -1295,7 +1297,7 @@ if(!isMobile()) {
         }
         if(sessionStorage.username != data.username) {
           if($(`#panelM${data.username}${data.destino}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti toast${data.username}${data.destino}"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
             //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
@@ -1307,7 +1309,7 @@ if(!isMobile()) {
             }
           }
           if($(`#panelM${data.destino}${data.username}`).is(':hidden')) {
-            Command: toastr["info"](`<div class="mensajeOtherNoti"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
+            Command: toastr["info"](`<div class="mensajeOtherNoti toast${data.username}${data.destino}"><strong class="nomNoti">${data.nombre}</strong> <br> <label class="messageNoti">${data.message}</label> <br> 
             <small class="lighter">Presione aquí para ver los mensajes</small> </div>`);
             //$('.messageNoti').text(data.message);
             $('.toast-info:last').css('margin-left', '5px');
@@ -1320,15 +1322,21 @@ if(!isMobile()) {
           }
         }
         //console.log(`${data.username}${data.destino}`, codAux, codPri);
-        $('.mensajeOtherNoti').each(function() {
+        $('#toast-container').each(function() {
           $(this).click(function() {
             //socket.emit('focusHistory');
-            
+              if($(this).find('.mensajeOtherNoti')[0]) {
+                classThis = $(this).find('.mensajeOtherNoti').prop('class').split(' ');
+              }
               //console.log(data.destino, sessionStorage.username);
+              compThis = classThis[1];
+              console.log($(`.${compThis}`)[0]);
               if($(`#userhistory${data.destino}${data.username}`)[0]) {
                 //console.log(`#userhistory${data.destino}${data.username}`);
+                $(`.${compThis}`).parent().parent().remove();
                 $(`#userhistory${data.destino}${data.username}`).click();
                 $(".btnmessage").click();
+                
                 return;
               }
               socket.emit('focusAll');
